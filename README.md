@@ -2,14 +2,14 @@
 
 ### Dependencies
 
+- Python 3
 - [Pelican](https://blog.getpelican.com/)
 
 ### Build
 
 ```sh
 # generate
-pelican content
+make html
 # preview at localhost:8000
-cd output
-python -m pelican.server
+make serve
 ```
