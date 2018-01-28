@@ -41,8 +41,9 @@ AUTHOR_WEB = 'https://johncf.github.io'
 REMARKBOX_KEY = 'da0795d2-039b-11e8-86c9-040140774501'
 
 # Social
+AUTHOR_TWITTER = 'jcf256'
 SOCIAL = (
-    ('twitter', 'http://twitter.com/jcf256'),
+    ('twitter', 'http://twitter.com/' + AUTHOR_TWITTER),
     ('github', 'https://github.com/johncf'),
 )
 

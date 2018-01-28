@@ -19,40 +19,23 @@
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="{{ article.title|striptags }}"/>
     <meta property="og:description" content="{{ article.summary|striptags|escape }}"/>
-    <meta property="og:site_name" content="{{ SITENAME }}" />
     <meta property="og:url" content="{{ SITEURL }}/{{ article.url }}"/>
-
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="{{ article.title|striptags }}">
-    <meta name="twitter:description" content="{{ article.summary|striptags|escape }}">
-    <meta name="twitter:url" content="{{ SITEURL }}/{{ article.url }}">
     {% elif page %}
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="{{ page.title }}"/>
     <meta property="og:description" content="{{ SITESUBTITLE }}"/>
-    <meta property="og:site_name" content="{{ SITENAME }}" />
     <meta property="og:url" content="{{ SITEURL }}/{{ page.url }}"/>
     <meta property="og:image" content="{{ AUTHOR_AVATAR }}"/>
-
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="{{ page.title }}">
-    <meta name="twitter:description" content="{{ SITESUBTITLE }}">
-    <meta name="twitter:url" content="{{ SITEURL }}/{{ page.url }}">
-    <meta name="twitter:image" content="{{ AUTHOR_AVATAR }}">
     {% else %}
     <meta property="og:type" content="website"/>
     <meta property="og:title" content="{{ SITENAME }}"/>
     <meta property="og:description" content="{{ SITESUBTITLE }}"/>
-    <meta property="og:site_name" content="{{ SITENAME }}" />
     <meta property="og:url" content="{{ SITEURL }}"/>
     <meta property="og:image" content="{{ AUTHOR_AVATAR }}"/>
-
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="{{ SITENAME }}">
-    <meta name="twitter:description" content="{{ SITESUBTITLE }}">
-    <meta name="twitter:url" content="{{ SITEURL }}">
-    <meta name="twitter:image" content="{{ AUTHOR_AVATAR }}">
     {% endif %}
+    <meta property="og:site_name" content="{{ SITENAME }}" />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@{{ AUTHOR_TWITTER }}">
 
     <!-- Feed -->
     {% if FEED_ALL_ATOM %}
@@ -104,7 +87,7 @@
   <body>
     <div class="w3-row w3-card w3-white">
       <header id="header">
-        <a href="{{ SITEURL }}" id="header-logo" title="Home">{{ MINIMALXY_LOGO }}</a>
+        <a href="{{ SITEURL }}/" id="header-logo" title="Home">{{ MINIMALXY_LOGO }}</a>
         <nav id="header-menu">
           <ul>
             {% if DISPLAY_PAGES_ON_MENU %}
