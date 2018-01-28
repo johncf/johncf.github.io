@@ -9,7 +9,6 @@ SITEURL = ''
 PATH = 'content'
 
 TIMEZONE = 'Asia/Kolkata'
-
 DEFAULT_LANG = 'en'
 DEFAULT_PAGINATION = 10
 
@@ -24,8 +23,8 @@ ARCHIVES_SAVE_AS = 'archives.html'
 CATEGORIES_SAVE_AS = 'categories.html'
 TAGS_SAVE_AS = 'tags.html'
 
-# Document-relative URLs
-RELATIVE_URLS = True
+RELATIVE_URLS = False
+FILENAME_METADATA = '(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'
 
 # Theme customizations
 MINIMALXY_LOGO = '01'
