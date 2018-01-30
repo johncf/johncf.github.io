@@ -138,6 +138,7 @@ ul.social li a:hover {
   color: white;
   font-size: 20pt;
   font-weight: bold;
+  margin-right: 20px;
 }
 
 #header-logo:hover {
@@ -329,7 +330,7 @@ ul.social li a:hover {
 
   #header-menu ul {
     flex-direction: row;
-    margin-top: 18px;
+    margin-top: 24px;
   }
 
   #content p.content-highlight {
