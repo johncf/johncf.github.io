@@ -28,7 +28,7 @@ $$ \frac{12/1000}{4~\text{days}} = 0.003~\text{per day} $$
 This fraction per unit-time is often expressed in percentage per unit-time (0.3% per day in
 the above example), but do note that it is perfectly fine for failure rate to be greater
 than 100% per unit-time. For instance, if we convert the unit in the above example from
-per-day to per-year, we get $0.3 * 365 = 109.5% per year$. This can be interpreted as
+per-day to per-year, we get $0.3 \times 365 = 109.5\%$ per year. This can be interpreted as
 follows: if we keep quickly replacing failed devices with good ones and maintain the
 population size at exactly 1000, then we can expect to see 1095 failures over an year of
 operation.
@@ -51,28 +51,42 @@ failure rate should be
 
 $$ \frac{75~\text{devices}}{150~\text{device-days}} = 50\%~\text{per day} $$
 
-(And yes, if we know the precise time of failure of each device, we could calculate the
-device-days term more precisely. The point is _we should!_ ...whenever possible.)
+(And yes, if we know the precise time of failure for each device, we could calculate the
+device-days term more precisely. And the point is _we should!_ ...whenever possible.)
 
 Note that this definition of failure rate is independent of the size of the population and
 span of observation. 10 failures in 100 device-days is 10% per day, and we could have
 obtained those observations using 16 devices over 10 days, or 105 devices in one day, or
 even by observing a different number of devices on random days and noting down the precise
-span of observation for each device and the counting the number of failures.
+span of observation for each device and the counting the number of failures during our
+watch.
 
-This was the key idea behind everything presented below, where failure rate is calculated
-with respect to power-on time instead of calendar time. So disks
+This is the key idea behind everything that follows, with one small difference being that
+the "rate" is calculated with respect to power-on time instead of calendar time.
+
+At this point let's fast-forward to the results and skip some details on how this idea
+gets tied to the methodology I present next. I'm planning to write a follow-up post on
+describing that in detail.
 
 ## The Methodology
 
-1. Compute the number of disks w.r.t power-on time.
-2. Compute the cumulative number of failures w.r.t power-on time.
-3. Smooth both curves using Savgol filter with order-1 polynomial and a fixed window-size.
-4. Compute the derivative of cumulative failure count while applying Savgol filter on it.
-5. The derivative of (smoothed) cumulative failures divided by the (smoothed) number of
-   disks gives our smooth failure rate curve for that disk model.
+1.  Compute the number of disks under observation w.r.t power-on time (say $N(t)$).
+2.  Compute the cumulative number of failures w.r.t power-on time (say $C(t)$).
+3.  Apply [Savitzky-Golay filter][] with polynomial-order 1 and a fixed window-size.
+    -  The smoothed $N(t)$ will be denoted by $N_s(t)$.
+    -  The first-derivative of the smoothed $C(t)$ will be denoted by $C_s'(t)$ (computing
+       derivatives is part of the filter).
+4.  The failure rate curve for the disk model is then computed as
+    $$ \lambda(t) = \frac{C_s'(t)}{N_s(t)} $$
 
-How exactly this method relates to our discussion from the previous section will be
-explained in a follow-up post.
+### Notes on Plots
+
+- $N_s(t)$ is labelled "disks observed" and $C_s'(t)$ is labelled "rate of failures."
+- Failure Rate expressed in per-year units is so common that it has a special name:
+  Annualized Failure Rate (AFR).
+- While the scale on Y-axis is kept the same for all graphs, the X-axis does differ
+  significantly across each model.
+
+[Savitzky-Golay filter]: https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter
 
 ## Results
