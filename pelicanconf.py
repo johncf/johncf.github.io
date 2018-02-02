@@ -21,6 +21,7 @@ SITENAME = 'In Short'
 SITEURL = ''
 
 PATH = 'content'
+STATIC_PATHS = [ 'analysis' ]
 
 TIMEZONE = 'Asia/Kolkata'
 DEFAULT_LANG = 'en'

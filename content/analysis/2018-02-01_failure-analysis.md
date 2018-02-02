@@ -82,11 +82,265 @@ describing that in detail.
 ### Notes on Plots
 
 - $N_s(t)$ is labelled "disks observed" and $C_s'(t)$ is labelled "rate of failures."
-- Failure Rate expressed in per-year units is so common that it has a special name:
-  Annualized Failure Rate (AFR).
 - While the scale on Y-axis is kept the same for all graphs, the X-axis does differ
   significantly across each model.
 
 [Savitzky-Golay filter]: https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter
 
 ## Results
+
+### Seagate ST4000DM000
+
+**Total disk-years observed:** 87647 <br>
+**Total failures observed:** 2593 <br>
+**Mean failure rate:** 2.96% per year
+
+**Useful power-on length of observation:** 4.42 years <br>
+**Mean number of disks over useful length:** 19828 disks <br>
+**Window size:** 1 month
+
+![Seagate ST4000DM000 failure rate plot]({attach}plots/01-plot.svg)
+
+### HGST HMS5C4040ALE640
+
+**Total disk-years observed:** 22824 <br>
+**Total failures observed:** 129 <br>
+**Mean failure rate:** 0.57% per year
+
+**Useful power-on length of observation:** 4.88 years <br>
+**Mean number of disks over useful length:** 4673 disks <br>
+**Window size:** 1 month
+
+![HGST HMS5C4040ALE640 failure rate plot]({attach}plots/02-plot.svg)
+
+### HGST HMS5C4040BLE640
+
+**Total disk-years observed:** 22220 <br>
+**Total failures observed:** 128 <br>
+**Mean failure rate:** 0.58% per year
+
+**Useful power-on length of observation:** 3.51 years <br>
+**Mean number of disks over useful length:** 6317 disks <br>
+**Window size:** 1 month
+
+![HGST HMS5C4040BLE640 failure rate plot]({attach}plots/03-plot.svg)
+
+### Hitachi HDS5C3030ALA630
+
+**Total disk-years observed:** 15645 <br>
+**Total failures observed:** 123 <br>
+**Mean failure rate:** 0.79% per year
+
+**Useful power-on length of observation:** 5.72 years <br>
+**Mean number of disks over useful length:** 2731 disks <br>
+**Window size:** 45 days
+
+![Hitachi HDS5C3030ALA630 failure rate plot]({attach}plots/04-plot.svg)
+
+### Hitachi HDS722020ALA330
+
+**Total disk-years observed:** 11894 <br>
+**Total failures observed:** 202 <br>
+**Mean failure rate:** 1.70% per year
+
+**Useful power-on length of observation:** 6.11 years <br>
+**Mean number of disks over useful length:** 1944 disks <br>
+**Window size:** 3 months
+
+![Hitachi HDS722020ALA330 failure rate plot]({attach}plots/05-plot.svg)
+
+### Seagate ST8000DM002
+
+**Total disk-years observed:** 10191 <br>
+**Total failures observed:** 113 <br>
+**Mean failure rate:** 1.11% per year
+
+**Useful power-on length of observation:** 1.36 years <br>
+**Mean number of disks over useful length:** 7461 disks <br>
+**Window size:** 15 days
+
+![Seagate ST8000DM002 failure rate plot]({attach}plots/06-plot.svg)
+
+### Hitachi HDS5C4040ALE630
+
+**Total disk-years observed:** 9820 <br>
+**Total failures observed:** 63 <br>
+**Mean failure rate:** 0.64% per year
+
+**Useful power-on length of observation:** 5.06 years <br>
+**Mean number of disks over useful length:** 1937 disks <br>
+**Window size:** 2 months
+
+![Hitachi HDS5C4040ALE630 failure rate plot]({attach}plots/07-plot.svg)
+
+### Seagate ST6000DX000
+
+**Total disk-years observed:** 4749 <br>
+**Total failures observed:** 59 <br>
+**Mean failure rate:** 1.24% per year
+
+**Useful power-on length of observation:** 3.15 years <br>
+**Mean number of disks over useful length:** 1502 disks <br>
+**Window size:** 2 months
+
+![Seagate ST6000DX000 failure rate plot]({attach}plots/08-plot.svg)
+
+### Seagate ST8000NM0055
+
+**Total disk-years observed:** 3653 <br>
+**Total failures observed:** 44 <br>
+**Mean failure rate:** 1.20% per year
+
+**Useful power-on length of observation:** 0.83 years <br>
+**Mean number of disks over useful length:** 4370 disks <br>
+**Window size:** 15 days
+
+![Seagate ST8000NM0055 failure rate plot]({attach}plots/09-plot.svg)
+
+### Hitachi HDS723030ALA640
+
+**Total disk-years observed:** 3332 <br>
+**Total failures observed:** 67 <br>
+**Mean failure rate:** 2.01% per year
+
+**Useful power-on length of observation:** 5.04 years <br>
+**Mean number of disks over useful length:** 659 disks <br>
+**Window size:** 3 months
+
+![Hitachi HDS723030ALA640 failure rate plot]({attach}plots/11-plot.svg)
+
+### WDC WD30EFRX
+
+**Total disk-years observed:** 3302 <br>
+**Total failures observed:** 166 <br>
+**Mean failure rate:** 5.03% per year
+
+**Useful power-on length of observation:** 4.71 years <br>
+**Mean number of disks over useful length:** 701 disks <br>
+**Window size:** 3 months
+
+![WDC WD30EFRX failure rate plot]({attach}plots/12-plot.svg)
+
+### Seagate ST31500541AS
+
+**Total disk-years observed:** 2818 <br>
+**Total failures observed:** 274 <br>
+**Mean failure rate:** 9.72% per year
+
+**Useful power-on length of observation:** 5.70 years <br>
+**Mean number of disks over useful length:** 494 disks <br>
+**Window size:** 6 months
+
+![Seagate ST31500541AS failure rate plot]({attach}plots/13-plot.svg)
+
+### Seagate ST500LM012 HN
+
+**Total disk-years observed:** 1555 <br>
+**Total failures observed:** 39 <br>
+**Mean failure rate:** 2.51% per year
+
+**Useful power-on length of observation:** 3.10 years <br>
+**Mean number of disks over useful length:** 502 disks <br>
+**Window size:** 4 months
+
+![Seagate ST500LM012 HN failure rate plot]({attach}plots/14-plot.svg)
+
+### WDC WD60EFRX
+
+**Total disk-years observed:** 1264 <br>
+**Total failures observed:** 58 <br>
+**Mean failure rate:** 4.59% per year
+
+**Useful power-on length of observation:** 3.17 years <br>
+**Mean number of disks over useful length:** 396 disks <br>
+**Window size:** 6 months
+
+![WDC WD60EFRX failure rate plot]({attach}plots/15-plot.svg)
+
+### WDC WD5000LPVX
+
+**Total disk-years observed:** 874 <br>
+**Total failures observed:** 40 <br>
+**Mean failure rate:** 4.58% per year
+
+**Useful power-on length of observation:** 3.47 years <br>
+**Mean number of disks over useful length:** 251 disks <br>
+**Window size:** 6 months
+
+![WDC WD5000LPVX failure rate plot]({attach}plots/16-plot.svg)
+
+## Low on Data
+
+The following models were not as popular as the ones seen till now, and the available logs
+were insufficient to produce low-noise graphs. Even with a wider window size, failure rates
+reached significantly higher values for these models. Thus Y-axis limit was raised to 48%.
+
+### WDC WD10EADS
+
+**Total disk-years observed:** 765 <br>
+**Total failures observed:** 52 <br>
+**Mean failure rate:** 6.80% per year
+
+**Useful power-on length of observation:** 5.16 years <br>
+**Mean number of disks over useful length:** 148 disks <br>
+**Window size:** 8 months
+
+![WDC WD10EADS failure rate plot]({attach}plots/17-plot.svg)
+
+### Seagate ST4000DX000
+
+**Total disk-years observed:** 688 <br>
+**Total failures observed:** 76 <br>
+**Mean failure rate:** 11.05% per year
+
+**Useful power-on length of observation:** 4.61 years <br>
+**Mean number of disks over useful length:** 149 disks <br>
+**Window size:** 8 months
+
+![Seagate ST4000DX000 failure rate plot]({attach}plots/18-plot.svg)
+
+### Seagate ST31500341AS
+
+**Total disk-years observed:** 506 <br>
+**Total failures observed:** 125 <br>
+**Mean failure rate:** 24.70% per year
+
+**Useful power-on length of observation:** 4.57 years <br>
+**Mean number of disks over useful length:** 110 disks <br>
+**Window size:** 8 months
+
+![Seagate ST31500341AS failure rate plot]({attach}plots/19-plot.svg)
+
+### Seagate ST33000651AS
+
+**Total disk-years observed:** 440 <br>
+**Total failures observed:** 19 <br>
+**Mean failure rate:** 4.32% per year
+
+**Useful power-on length of observation:** 3.75 years <br>
+**Mean number of disks over useful length:** 116 disks <br>
+**Window size:** 8 months
+
+![Seagate ST33000651AS failure rate plot]({attach}plots/20-plot.svg)
+
+## A Bad Egg?
+
+One model stood out from the rest with a staggeringly bad failure rate. These Seagate model
+disks performed so badly in their datacenter that all reliability benchmarks that compared
+manufacturers showed Seagate performing especially badly thanks to the failures contributed
+by disks of this model. Let's take a look.
+
+### Seagate ST3000DM001
+
+**Total disk-years observed:** 3480 <br>
+**Total failures observed:** 1454 <br>
+**Mean failure rate:** 41.78% per year
+
+**Useful power-on length of observation:** 3.28 years <br>
+**Mean number of disks over useful length:** 1060 disks <br>
+**Window size:** 3 months
+
+![Seagate ST3000DM001 failure rate plot]({attach}plots/10-plot.svg)
+
+_(Note: Upper-limit of Y-axis is 120%!)_
+
