@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 from datetime import datetime
 
+THEME = 'minimalxy'
 PLUGIN_PATHS = ['plugins']
 PLUGINS = ['render_math']
 MARKDOWN = {
