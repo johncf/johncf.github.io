@@ -1,4 +1,4 @@
-## [johncf.github.io](https://johncf.github.io)
+## Blog
 
 ### Dependencies
 
