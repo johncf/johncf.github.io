@@ -51,9 +51,8 @@ MINIMALXY_CURRENT_YEAR = datetime.now().year
 
 # Author
 AUTHOR_INTRO = u'Hello! I’m John.'
-AUTHOR_DESCRIPTION = u'I like things simple.'
+AUTHOR_DESCRIPTION = u'Trying to keep things simple.'
 AUTHOR_AVATAR = 'https://www.gravatar.com/avatar/3ff0a46f18c8d548fa91c12b922290b6?s=160'
-AUTHOR_WEB = 'https://johncf.github.io'
 
 # Comments
 REMARKBOX_KEY = 'da0795d2-039b-11e8-86c9-040140774501'

@@ -118,6 +118,10 @@ ul.social li a:hover {
   opacity: 0.85;
 }
 
+div.footnote {
+  font-size: 8pt;
+}
+
 
 
 /* Ids */
@@ -249,14 +253,9 @@ ul.social li a:hover {
   background-color:#f1f1f1;
 }
 
-#content ul, #content ol {
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-}
-
 #content p {
   margin-top: 0;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1em;
 }
 
 #content p > img {
