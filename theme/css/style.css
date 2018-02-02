@@ -4,12 +4,12 @@ body {
   margin: 0px;
   padding: 0px;
   background-color: #fcfcfc;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Noto Sans', sans-serif;
   font-size: 12pt;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Noto Sans', sans-serif;
   line-height: 1.1;
 }
 
@@ -47,6 +47,10 @@ article {
 
 abbr[title] {
   text-decoration: underline;
+}
+
+code, kbd, pre, samp {
+  font-family: 'Roboto Mono', monospace;
 }
 
 ::selection {
@@ -138,6 +142,7 @@ ul.social li a:hover {
   color: white;
   font-size: 20pt;
   font-weight: bold;
+  margin-right: 20px;
 }
 
 #header-logo:hover {
@@ -176,7 +181,7 @@ ul.social li a:hover {
 }
 
 #intro-description {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Noto Sans', sans-serif;
   font-style: italic;
   font-size: 11pt;
 }
@@ -329,7 +334,7 @@ ul.social li a:hover {
 
   #header-menu ul {
     flex-direction: row;
-    margin-top: 18px;
+    margin-top: 24px;
   }
 
   #content p.content-highlight {

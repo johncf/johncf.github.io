@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Disk Failure Analysis using Backblaze Data &ndash; In Short</title>
+
+    <!-- Meta -->
+    <meta name="description" content="In Short &ndash; ">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Social -->
+    <meta property="article:author" content="John C F" />
+    <meta property="article:section" content="analysis" />
+    <meta property="article:published_time" content="2018-02-01" />
+
+    <meta property="og:type" content="article"/>
+    <meta property="og:title" content="Disk Failure Analysis using Backblaze Data"/>
+    <meta property="og:description" content="Backblaze has been doing an amazing job of publicly releasing hard disk logs from their data centers in a very clean and easy-to-use format since 2013. I came across these while I was doing a project on disk failure analysis at my University in collaboration with NetApp. Using this data …"/>
+    <meta property="og:url" content="https://johncf.github.io/drafts/failure-analysis.html"/>
+    <meta property="og:site_name" content="In Short" />
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:creator" content="@jcf256">
+
+    <!-- Feed -->
+    <link rel="alternate" type="application/atom+xml" href="https://johncf.github.io/feeds/all.atom.xml" title="In Short Atom Feed" />
+    <link rel="alternate" type="application/atom+xml" href="https://johncf.github.io/feeds/analysis.atom.xml" title="In Short Categories Atom Feed" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto+Sans:regular,bold">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto+Mono:regular,bold">
+    <link rel="stylesheet" type="text/css" href="https://johncf.github.io/theme/css/w3.css">
+    <link rel="stylesheet" type="text/css" href="https://johncf.github.io/theme/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://johncf.github.io/theme/css/jqcloud.css">
+    <link rel="stylesheet" type="text/css" href="https://johncf.github.io/theme/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://johncf.github.io/theme/css/pygments-highlight-github.css">
+
+    <!-- Icon -->
+
+    <!-- JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://johncf.github.io/theme/js/jqcloud.min.js"></script>
+  </head>
+
+  <body>
+    <div class="w3-row w3-card w3-white">
+      <header id="header">
+        <h2 class="main-title">
+        <a href="https://johncf.github.io/" id="header-logo" title="Home">01</a><span>In Short</span>
+        </h1>
+        <nav id="header-menu">
+          <ul>
+            <li class="w3-bottombar w3-border-white w3-hover-border-green" ><a href="https://johncf.github.io/category/meta.html">meta</a></li>
+            <li class="w3-bottombar w3-border-white w3-hover-border-green"><a href="/archives.html">Archive</a></li>
+          </ul>
+        </nav>
+      </header>
+    </div>
+
+
+
+    <br><br><br>
+
+    <article>
+      <header class="w3-container col-main">
+        <h1>Disk Failure Analysis using Backblaze Data</h1>
+        <div class="post-info">
+          <div class="w3-opacity w3-margin-right w3-margin-bottom" style="flex-grow: 1;">
+            <span><time datetime="2018-02-01T00:00:00+05:30">Thu 01 February 2018</time> in <a href="https://johncf.github.io/category/analysis.html" title="All articles in category analysis">analysis</a></span>
+          </div>
+        </div>
+      </header>
+
+      <br>
+
+
+      <div class="col-main w3-container">
+        <section id="content">
+          <p>Backblaze has been doing an amazing job of publicly releasing hard disk logs from their data
+centers in a very clean and easy-to-use format since 2013. I came across these while I was
+doing a project on disk failure analysis at my University in collaboration with NetApp.</p>
+<p>Using this data from Backblaze, I computed failure rate of various disk models as a function
+of their age. But first, let me start with a brief discussion on "failure rates" and the
+key idea behind the technique.</p>
+<p><a href="#results">skip to results</a></p>
+<h2 id="on-failure-rates">On Failure Rates</h2>
+<p>I am going to define <em>Failure Rate</em> as follows:</p>
+<blockquote>
+<p><strong>Failure Rate</strong> is the number of failures per device per unit time.</p>
+</blockquote>
+<p>Or, equivalently, it is the <em>fraction</em> of failures in a device population per unit time.</p>
+<h3 id="example-1">Example 1</h3>
+<p>If we observed 12 failures over 4 days from a population of 1000 devices, then the failure
+rate is</p>
+<div class="math">$$ \frac{12/1000}{4~\text{days}} = 0.003~\text{per day} $$</div>
+<p>This fraction per unit-time is often expressed in percentage per unit-time (0.3% per day in
+the above example), but do note that it is perfectly fine for failure rate to be greater
+than 100% per unit-time. For instance, if we convert the unit in the above example from
+per-day to per-year, we get <span class="math">\(0.3 \times 365 = 109.5\%\)</span> per year. This can be interpreted as
+follows: if we keep quickly replacing failed devices with good ones and maintain the
+population size at exactly 1000, then we can expect to see 1095 failures over an year of
+operation.</p>
+<h3 id="example-2">Example 2</h3>
+<p>Let's say we started out with 80 devices. On each day, exactly half of the devices failed,
+and we observed this for 4 days with 5 out of 10 disks failing on the 4th day. What is the
+average failure rate over those 4 days? It should be about 50% per day, right? Yes, but if
+we naïvely follow the "equivalent" definition from above, "fraction of failures" per unit
+time, it might go like this:</p>
+<div class="math">$$ \frac{75/80}{4~\text{days}} = 23.44\%~\text{per day} $$</div>
+<p>The "equivalent" definition is only true when the population size is kept constant through
+quick replacements during the span of observation (or if the number of failures is very
+small compared to the population size). So we turn to our original definition: "number of
+failures per device-time." We saw 75 device failures over 80+40+20+10 device-days. So the
+failure rate should be</p>
+<div class="math">$$ \frac{75~\text{devices}}{150~\text{device-days}} = 50\%~\text{per day} $$</div>
+<p>(And yes, if we know the precise time of failure for each device, we could calculate the
+device-days term more precisely. And the point is <em>we should!</em> ...whenever possible.)</p>
+<p>Note that this definition of failure rate is independent of the size of the population and
+span of observation. 10 failures in 100 device-days is 10% per day, and we could have
+obtained those observations using 16 devices over 10 days, or 105 devices in one day, or
+even by observing a different number of devices on random days and noting down the precise
+span of observation for each device and the counting the number of failures during our
+watch.</p>
+<p>This is the key idea behind everything that follows, with one small difference being that
+the "rate" is calculated with respect to power-on time instead of calendar time.</p>
+<p>At this point let's fast-forward to the results and skip some details on how this idea
+gets tied to the methodology I present next. I'm planning to write a follow-up post on
+describing that in detail.</p>
+<h2 id="the-methodology">The Methodology</h2>
+<ol>
+<li>Compute the number of disks under observation w.r.t power-on time (say <span class="math">\(N(t)\)</span>).</li>
+<li>Compute the cumulative number of failures w.r.t power-on time (say <span class="math">\(C(t)\)</span>).</li>
+<li>Apply <a href="https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter">Savitzky-Golay filter</a> with polynomial-order 1 and a fixed window-size.<ul>
+<li>The smoothed <span class="math">\(N(t)\)</span> will be denoted by <span class="math">\(N_s(t)\)</span>.</li>
+<li>The first-derivative of the smoothed <span class="math">\(C(t)\)</span> will be denoted by <span class="math">\(C_s'(t)\)</span> (computing
+   derivatives is part of the filter).</li>
+</ul>
+</li>
+<li>The failure rate curve for the disk model is then computed as
+    <div class="math">$$ \lambda(t) = \frac{C_s'(t)}{N_s(t)} $$</div>
+</li>
+</ol>
+<h3 id="notes-on-plots">Notes on Plots</h3>
+<ul>
+<li><span class="math">\(N_s(t)\)</span> is labelled "disks observed" and <span class="math">\(C_s'(t)\)</span> is labelled "rate of failures."</li>
+<li>Failure Rate expressed in per-year units is so common that it has a special name:
+  Annualized Failure Rate (AFR).</li>
+<li>While the scale on Y-axis is kept the same for all graphs, the X-axis does differ
+  significantly across each model.</li>
+</ul>
+<h2 id="results">Results</h2>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+        </section>
+
+        <br><br><br>
+
+        <footer>
+          <div class="adjust-width">
+            <div id="author-block" class="w3-light-grey w3-border">
+              <div id="author-info">
+                <a href="https://johncf.github.io"><img style="width: 60px; height: 60px; border-radius: 50%" src="https://www.gravatar.com/avatar/3ff0a46f18c8d548fa91c12b922290b6?s=160" onerror="this.src='theme/images/avatar.png'" alt="Avatar"></a>
+                <div style="margin-left: 20px; margin-top: 15px;">
+                  <a href="https://johncf.github.io"><span id="author-name" class="w3-hover-text-dark-grey">John C F</span></a>
+                  <p id="author-story">I like things simple.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <br><br><br>
+
+          <p style="font-size:10pt; font-style: italic;">Did you like this article? Share it with your friends!</p>
+          <div id="share" class="share">
+            <a href="http://www.facebook.com/sharer.php?u=https%3A//johncf.github.io/drafts/failure-analysis.html&amp;t=In%20Short%3A%20Disk%20Failure%20Analysis%20using%20Backblaze%20Data" target="_blank" class="w3-btn w3-indigo">
+              <i class="fa fa-facebook"></i> <span>Facebook</span>
+            </a>
+            <a href="http://twitter.com/share?url=https%3A//johncf.github.io/drafts/failure-analysis.html&amp;text=In%20Short%3A%20Disk%20Failure%20Analysis%20using%20Backblaze%20Data" target="_blank" class="w3-btn w3-blue">
+              <i class="fa fa-twitter"></i> <span>Twitter</span>
+            </a>
+            <a href="https://plus.google.com/share?url=https%3A//johncf.github.io/drafts/failure-analysis.html" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" class="w3-btn w3-red">
+              <i class="fa fa-google-plus"></i> <span>Google</span>
+            </a>
+          </div>
+
+          <br><br><br>
+
+
+        <!-- Remarkbox - Your readers want to communicate with you -->
+        <div id="remarkbox-div">
+          <noscript>
+            <iframe id=remarkbox-iframe src="https://my.remarkbox.com/embed?nojs=true" style="height:600px;width:100%;border:none!important" tabindex=0></iframe>
+          </noscript>
+        </div>
+        <script src="https://my.remarkbox.com/static/js/iframe-resizer/iframeResizer.min.js"></script>
+        <script>
+          var rb_owner_key = "da0795d2-039b-11e8-86c9-040140774501";
+          var thread_uri = window.location.href;
+          var thread_fragment = window.location.hash;
+          function create_remarkbox_iframe() {
+            var src = "https://my.remarkbox.com/embed?rb_owner_key=" + rb_owner_key + "&thread_uri=" + thread_uri;
+            var ifrm = document.createElement("iframe");
+            ifrm.setAttribute("id", "remarkbox-iframe");
+            ifrm.setAttribute("scrolling", "no");
+            ifrm.setAttribute("src", src);
+            ifrm.setAttribute("frameborder", "0");
+            ifrm.setAttribute("tabindex", "0");
+            ifrm.setAttribute("title", "Remarkbox");
+            ifrm.style.width = "100%";
+            document.getElementById("remarkbox-div").appendChild(ifrm);
+          }
+          create_remarkbox_iframe();
+          iFrameResize(
+            {
+              checkOrigin: ["https://my.remarkbox.com"],
+              inPageLinks: true,
+              initCallback: function(e) {e.iFrameResizer.moveToAnchor(thread_fragment)}
+            },
+            document.getElementById("remarkbox-iframe")
+          );
+        </script>
+
+        </footer>
+      </div>
+    </article>
+
+
+    <footer id="footer">
+      <div id="footer-copyright" class="w3-center w3-small w3-text-grey w3-padding-24">
+        <p>
+          2018 &middot;
+          John C F
+ &middot; <a href="https://johncf.github.io/feeds/all.atom.xml">Atom feed <i class="fa fa-rss" aria-hidden="true"></i></a>        </p>
+        <p>
+          Powered by <a href="https://blog.getpelican.com/">Pelican</a> &middot; <a href="https://github.com/petrnohejl/MinimalXY">MinimalXY</a> theme
+        </p>
+      </div>
+    </footer>
+
+
+
+  </body>
+</html>
