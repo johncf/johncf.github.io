@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
+from datetime import datetime
 
 PLUGIN_PATHS = ['plugins']
 PLUGINS = ['render_math']
@@ -41,7 +42,7 @@ FILENAME_METADATA = '(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'
 # Theme customizations
 MINIMALXY_LOGO = '01'
 #MINIMALXY_FAVICON = 'favicon.ico'
-#MINIMALXY_START_YEAR = 2018
+MINIMALXY_CURRENT_YEAR = datetime.now().year
 
 # Author
 AUTHOR_INTRO = u'Hello! I’m John.'
@@ -55,8 +56,10 @@ REMARKBOX_KEY = 'da0795d2-039b-11e8-86c9-040140774501'
 # Social
 AUTHOR_TWITTER = 'jcf256'
 SOCIAL = (
+    ('envelope', 'mailto:john.ch.fr@gmail.com'),
     ('twitter', 'http://twitter.com/' + AUTHOR_TWITTER),
     ('github', 'https://github.com/johncf'),
+    ('gitlab', 'https://gitlab.com/johncf'),
 )
 
 # Menu

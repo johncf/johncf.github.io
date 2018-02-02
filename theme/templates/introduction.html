@@ -7,6 +7,9 @@
             {% for name, link in SOCIAL %}
             <li><a class="sc-{{ name }}" href="{{ link }}" target="_blank"><i class="fa fa-{{ name }}"></i></a></li>
             {% endfor %}
+            {% if FEED_ALL_ATOM %}
+            <li><a class="sc-rss" href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM }}"><i class="fa fa-rss"></i></a></li>
+            {% endif %}
           </ul>
           {% endif %}
         </div>
