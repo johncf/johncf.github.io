@@ -17,7 +17,7 @@
 
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Disk Failure Analysis using Backblaze Data"/>
-    <meta property="og:description" content="Backblaze has been doing an amazing job of publicly releasing hard disk logs from their data centers in a very clean and easy-to-use format since 2013. I came across these while I was doing a project on disk failure analysis at my University in collaboration with NetApp. Using this data …"/>
+    <meta property="og:description" content="Backblaze has been doing an amazing job of publicly releasing hard disk logs from their data centers in a very clean and easy-to-use format since 2013. I came across these while I was doing a project on disk failure analysis at my University in collaboration with NetApp. Recently, I decided …"/>
     <meta property="og:url" content="https://johncf.github.io/drafts/failure-analysis.html"/>
     <meta property="og:site_name" content="In Short" />
     <meta name="twitter:card" content="summary">
@@ -80,9 +80,9 @@
           <p>Backblaze has been doing an amazing job of publicly releasing hard disk logs from their data
 centers in a very clean and easy-to-use format since 2013. I came across these while I was
 doing a project on disk failure analysis at my University in collaboration with NetApp.</p>
-<p>Using this data from Backblaze, I computed failure rate of various disk models as a function
-of their age. But first, let me start with a brief discussion on "failure rates" and the
-key idea behind the technique.</p>
+<p>Recently, I decided to write an article describing one of the techniques I developed during
+my time at university, and apply it on Backblaze' data. Using this method, we can obtain
+failure rate of hard disks as a function of its age.</p>
 <p><a href="#results">skip to results</a></p>
 <h2 id="on-failure-rates">On Failure Rates</h2>
 <p>I am going to define <em>Failure Rate</em> as follows:</p>
@@ -125,32 +125,31 @@ watch.</p>
 <p>This is the key idea behind everything that follows, with one small difference being that
 the "rate" is calculated with respect to power-on time instead of calendar time.</p>
 <p>At this point let's fast-forward to the results and skip some details on how this idea
-gets tied to the methodology I present next. I'm planning to write a follow-up post on
+gets tied to the methodology I present next. I'm planning to write a follow-up post
 describing that in detail.</p>
 <h2 id="the-methodology">The Methodology</h2>
 <ol>
-<li>Compute the number of disks under observation w.r.t power-on time (say <span class="math">\(N(t)\)</span>).</li>
-<li>Compute the cumulative number of failures w.r.t power-on time (say <span class="math">\(C(t)\)</span>).</li>
-<li>Apply <a href="https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter">Savitzky-Golay filter</a> with polynomial-order 1 and a fixed window-size.<ul>
-<li>The smoothed <span class="math">\(N(t)\)</span> will be denoted by <span class="math">\(N_s(t)\)</span>.</li>
-<li>The first-derivative of the smoothed <span class="math">\(C(t)\)</span> will be denoted by <span class="math">\(C_s'(t)\)</span> (computing
-   derivatives is part of the filter).</li>
+<li>Compute the number of disks under observation w.r.t power-on time (call it <span class="math">\(N(t)\)</span>).</li>
+<li>Compute the cumulative number of failures w.r.t power-on time (call it <span class="math">\(C(t)\)</span>).</li>
+<li>Apply <a href="https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter">Savitzky-Golay filter</a> (a smoothing technique) with polynomial-order 1 and a
+    fixed window-size to <span class="math">\(N(t)\)</span> and <span class="math">\(C(t)\)</span>.<ul>
+<li><span class="math">\(N_s(t)\)</span> denotes the smoothed <span class="math">\(N(t)\)</span>.</li>
+<li><span class="math">\(C_s'(t)\)</span> denotes the first-derivative of smoothed <span class="math">\(C(t)\)</span> (computing derivatives is
+   part of the filter).</li>
 </ul>
 </li>
-<li>The failure rate curve for the disk model is then computed as
+<li>Then the failure rate function is computed as
     <div class="math">$$ \lambda(t) = \frac{C_s'(t)}{N_s(t)} $$</div>
 </li>
 </ol>
-<h3 id="notes-on-plots">Notes on Plots</h3>
+<h2 id="notes-on-plots">Notes on Plots</h2>
 <ul>
-<li><span class="math">\(N_s(t)\)</span> is labelled "disks observed" and <span class="math">\(C_s'(t)\)</span> is labelled "rate of failures."</li>
-<li>While the scale on Y-axis is kept the same for all graphs, the X-axis does differ
-  significantly across each model.</li>
-<li>The window size used for smoothing is roughly correlated to the number of disks that were
+<li>In the top subplots, "disks observed" denotes <span class="math">\(N_s(t)\)</span> and "rate of failures" denotes
+  <span class="math">\(C_s'(t)\)</span>.</li>
+<li>The window size of the filter is roughly correlated to the number of disks that were
   observed at various points of age (power-on time).</li>
-<li>The failure rates (both low and high) at regions where the number of disks observed is
-  less than 1000 is not to be taken too seriously.</li>
-<li>Log-scale Y-axis in upper subplot, but normal scales in lower subplot.</li>
+<li>The failure rate values at regions where the number of disks observed is less than 1000
+  is not to be taken too seriously (both low and high).</li>
 </ul>
 <h2 id="results">Results</h2>
 <h3 id="seagate-st4000dm000">Seagate ST4000DM000</h3>
