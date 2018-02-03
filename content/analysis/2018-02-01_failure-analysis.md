@@ -4,9 +4,9 @@ Backblaze has been doing an amazing job of publicly releasing hard disk logs fro
 centers in a very clean and easy-to-use format since 2013. I came across these while I was
 doing a project on disk failure analysis at my University in collaboration with NetApp.
 
-Using this data from Backblaze, I computed failure rate of various disk models as a function
-of their age. But first, let me start with a brief discussion on "failure rates" and the
-key idea behind the technique.
+Recently, I decided to write an article describing one of the techniques I developed during
+my time at university, and apply it on Backblaze' data. Using this method, we can obtain
+failure rate of hard disks as a function of its age.
 
 [skip to results](#results)
 
@@ -65,32 +65,31 @@ This is the key idea behind everything that follows, with one small difference b
 the "rate" is calculated with respect to power-on time instead of calendar time.
 
 At this point let's fast-forward to the results and skip some details on how this idea
-gets tied to the methodology I present next. I'm planning to write a follow-up post on
+gets tied to the methodology I present next. I'm planning to write a follow-up post
 describing that in detail.
 
 ## The Methodology
 
-1.  Compute the number of disks under observation w.r.t power-on time (say $N(t)$).
-2.  Compute the cumulative number of failures w.r.t power-on time (say $C(t)$).
-3.  Apply [Savitzky-Golay filter][] with polynomial-order 1 and a fixed window-size.
-    -  The smoothed $N(t)$ will be denoted by $N_s(t)$.
-    -  The first-derivative of the smoothed $C(t)$ will be denoted by $C_s'(t)$ (computing
-       derivatives is part of the filter).
-4.  The failure rate curve for the disk model is then computed as
+1.  Compute the number of disks under observation w.r.t power-on time (call it $N(t)$).
+2.  Compute the cumulative number of failures w.r.t power-on time (call it $C(t)$).
+3.  Apply [Savitzky-Golay filter][] (a smoothing technique) with polynomial-order 1 and a
+    fixed window-size to $N(t)$ and $C(t)$.
+    -  $N_s(t)$ denotes the smoothed $N(t)$.
+    -  $C_s'(t)$ denotes the first-derivative of smoothed $C(t)$ (computing derivatives is
+       part of the filter).
+4.  Then the failure rate function is computed as
     $$ \lambda(t) = \frac{C_s'(t)}{N_s(t)} $$
 
-### Notes on Plots
-
-- $N_s(t)$ is labelled "disks observed" and $C_s'(t)$ is labelled "rate of failures."
-- While the scale on Y-axis is kept the same for all graphs, the X-axis does differ
-  significantly across each model.
-- The window size used for smoothing is roughly correlated to the number of disks that were
-  observed at various points of age (power-on time).
-- The failure rates (both low and high) at regions where the number of disks observed is
-  less than 1000 is not to be taken too seriously.
-- Log-scale Y-axis in upper subplot, but normal scales in lower subplot.
-
 [Savitzky-Golay filter]: https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter
+
+## Notes on Plots
+
+- In the top subplots, "disks observed" denotes $N_s(t)$ and "rate of failures" denotes
+  $C_s'(t)$.
+- The window size of the filter is roughly correlated to the number of disks that were
+  observed at various points of age (power-on time).
+- The failure rate values at regions where the number of disks observed is less than 1000
+  is not to be taken too seriously (both low and high).
 
 ## Results
 
@@ -371,6 +370,8 @@ I'm not sure which it is, and Backblaze only had this to say about these drives[
 > their failure rates in a future blog post [that never came].
 
 ## Conclusions
+
+
 
 [^sanity]: The data released by Backblaze is of exceptionally high-quality. I've seen things
     and written queries that still haunts me at night!
