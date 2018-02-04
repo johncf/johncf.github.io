@@ -2,83 +2,114 @@ Title: Disk Failure Analysis using Backblaze Data
 
 Backblaze has been doing an amazing job of publicly releasing hard disk logs from their data
 centers in a very clean and easy-to-use format since 2013. I came across these while I was
-doing a project on disk failure analysis at my University in collaboration with NetApp.
+doing a project on reliability analysis at my University in collaboration with NetApp.
 
-Recently, I decided to write an article describing one of the techniques I developed during
-my time at university, and apply it on Backblaze' data. Using this method, we can obtain
-failure rate of hard disks as a function of its age.
+This article describes an interesting part of my project where I analyzed real-world data to
+obtain failure rate of hard disks as a "continuous" function of its age.
 
-[skip to results](#results)
+[TOC]
 
 ## On Failure Rates
 
-I am going to define _Failure Rate_ as follows:
+> **Failure Rate** is the frequency with which a device fails (or is expected to fail),
+> expressed in failures per unit time.[^wiki]
 
-> **Failure Rate** is the number of failures per device per unit time.
+For instance, a manufacturer may specify the failure rate of a device to be 0.5 failures per
+year. We may interpret it in two ways:
 
-Or, equivalently, it is the _fraction_ of failures in a device population per unit time.
+- Such a device is expected to fail within 2 years.
+- If we have 10 such devices, then 5 of them are expected to fail within a year.
 
-### Example 1
+On the other hand, if the device failure rate was specified at 1.5 per year, then:
 
-If we observed 12 failures over 4 days from a population of 1000 devices, then the failure
-rate is
+- Such a device is expected to fail within 0.75 years.
+- If we have 10 such devices and whenever a failure occurs, we're going to quickly replace
+  it with a new one, then we are expected to see 15 failures within a year.
 
-$$ \frac{12/1000}{4~\text{days}} = 0.003~\text{per day} $$
+Although perfectly valid, failure rates are rarely expressed in a unit where the value is
+higher than 1. Continuing previous example, 1.5 per year is more intuitive to be expressed
+as 0.125 per month, since a natural interpretation of failure rate is as the fraction of
+population that is expected to fail with a unit of time. Furthermore, it is often expressed
+in percentage (e.g. 12.5% per month or 150% per year) rather than a simple fraction.
 
-This fraction per unit-time is often expressed in percentage per unit-time (0.3% per day in
-the above example), but do note that it is perfectly fine for failure rate to be greater
-than 100% per unit-time. For instance, if we convert the unit in the above example from
-per-day to per-year, we get $0.3 \times 365 = 109.5\%$ per year. This can be interpreted as
-follows: if we keep quickly replacing failed devices with good ones and maintain the
-population size at exactly 1000, then we can expect to see 1095 failures over an year of
-operation.
+### Calculation
 
-### Example 2
+Let's take a simple example. Suppose we observed 20 failures over 2 months from a population
+of 1000 devices, then the (average) failure rate is
 
-Let's say we started out with 80 devices. On each day, exactly half of the devices failed,
-and we observed this for 4 days with 5 out of 10 disks failing on the 4th day. What is the
-average failure rate over those 4 days? It should be about 50% per day, right? Yes, but if
-we naïvely follow the "equivalent" definition from above, "fraction of failures" per unit
-time, it might go like this:
+$$ \frac{20/1000}{2~\text{months}} = 0.01~\text{per month} = 1\%~\text{per month} =
+12\%~\text{per year} $$
 
-$$ \frac{75/80}{4~\text{days}} = 23.44\%~\text{per day} $$
+The above expression suggests distributing the fraction of failures over the span of
+observation. This holds true only when the change in size of the population is marginal (or
+kept the same through replacements). Howerever, in most data centers, the size of the
+drive population fluctuates significantly due to (a combination of)
 
-The "equivalent" definition is only true when the population size is kept constant through
-quick replacements during the span of observation (or if the number of failures is very
-small compared to the population size). So we turn to our original definition: "number of
-failures per device-time." We saw 75 device failures over 80+40+20+10 device-days. So the
-failure rate should be
+- Batches of (new) drives being deployed.
+- Batches of (old) drives being returned.
+- Failure rate being too high.
 
-$$ \frac{75~\text{devices}}{150~\text{device-days}} = 50\%~\text{per day} $$
+In such a cases, what should be the "size of population"? The answer is to use the
+time-average of the size of population, which resolves into the following generalized
+expression for failure rate calculation:
 
-(And yes, if we know the precise time of failure for each device, we could calculate the
-device-days term more precisely. And the point is _we should!_ ...whenever possible.)
+$$ \text{Failure Rate} = \frac{\text{Number of Failures}}{\text{Device-time}} $$
 
-Note that this definition of failure rate is independent of the size of the population and
-span of observation. 10 failures in 100 device-days is 10% per day, and we could have
-obtained those observations using 16 devices over 10 days, or 105 devices in one day, or
-even by observing a different number of devices on random days and noting down the precise
-span of observation for each device and the counting the number of failures during our
-watch.
+To illustrate, suppose we started out with 1000 devices. During the first month, 40 devices
+failed. At the start of second month, 2000 new devices were added to the population, and
+120 devices failed during that month. Then the total device-time we observed should be about
+(960 + 20) + (2840 + 60) device-months (assuming that 40 failed devices in first month
+contributed 20 device-months, and 120 failed devices in second month contributed 60
+device-months), and the failure rate is:
 
-This is the key idea behind everything that follows, with one small difference being that
-the "rate" is calculated with respect to power-on time instead of calendar time.
+$$ \frac{160}{3880~\text{device-months}} = 4.1\%~\text{per month} $$
 
-At this point let's fast-forward to the results and skip some details on how this idea
-gets tied to the methodology I present next. I'm planning to write a follow-up post
-describing that in detail.
+### Age
+
+Age is a key factor that affects a device's risk of failure. Therefore, it is more
+interesting to study failure rates with respect to age, rather than actual time. For this,
+we simply map the events of interest (those discussed in previous section) from time-domain
+to the age-domain. Let's look at a small example of this mapping.
+
+Suppose we have 2 hard drives -- one brand new and the other a year old. They were kept in
+operation for 2 years, but the newer one failed during the second year of operation when it
+was exactly 500 days old. Here's the time-domain plot of these events:
+
+![Time-domain events]({attach}plots/time-domain.svg)
+
+Red dashed-line indicates the failure event. The older drive was operational for the entire
+2 years (730 days), making it 1095 days old at the end.
+
+Here is the same mapped to the age-domain:
+
+![Age-domain events]({attach}plots/age-domain.svg)
+
+To calculate the (average) failure rate in a specific window of age, count the number of
+failures in that window ($N_f$), and calculate the area under "Number of disks vs. Age"
+graph (blue) in that window to get the corresponding disk-time ($D$). Then failure rate,
+$\lambda = N_f / D$.
+
+_Sidenote: For hard drives, age is best represented by power-on time, since the
+[self-monitoring system][SMART] present in most drives contain power-on hours attribute._
+
+[SMART]: https://en.wikipedia.org/wiki/S.M.A.R.T.
 
 ## The Methodology
 
-1.  Compute the number of disks under observation w.r.t power-on time (call it $N(t)$).
-2.  Compute the cumulative number of failures w.r.t power-on time (call it $C(t)$).
-3.  Apply [Savitzky-Golay filter][] (a smoothing technique) with polynomial-order 1 and a
+1.  From disk logs, construct
+    - The number of disks observed as a function of power-on time ($N(t)$).
+    - The cumulative number of failures as a function of power-on time ($C(t)$).
+2.  Apply [Savitzky-Golay filter][] (a smoothing technique) with polynomial-order 1 and a
     fixed window-size to $N(t)$ and $C(t)$.
-    -  $N_s(t)$ denotes the smoothed $N(t)$.
-    -  $C_s'(t)$ denotes the first-derivative of smoothed $C(t)$ (computing derivatives is
-       part of the filter).
-4.  Then the failure rate function is computed as
+    -  Let $N_s(t)$ denote the smoothed $N(t)$.
+    -  Let $C_s'(t)$ denote the first-derivative of smoothed $C(t)$.
+3.  Then the failure rate vs power-on time function is computed as
     $$ \lambda(t) = \frac{C_s'(t)}{N_s(t)} $$
+
+The above method equivalent to what I discussed in the previous section, with a moving
+window. At $t_0$, $C_s'(t_0)$ is the average number of failures per unit-time in a
+particular window around $t_0$, and $N_s(t_0)$ is the average number of disks in the same
+window.
 
 [Savitzky-Golay filter]: https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter
 
@@ -99,8 +130,8 @@ describing that in detail.
 **Total failures observed:** 2593 <br>
 **Mean failure rate:** 2.96% per year
 
-**Useful power-on length of observation:** 4.42 years <br>
-**Mean number of disks over useful length:** 19828 <br>
+**Useful power-on span of observation:** 4.42 years <br>
+**Mean number of disks over useful span:** 19828 <br>
 **Window size:** 1 month
 
 ![Seagate ST4000DM000 failure rate plot]({attach}plots/01-plot.svg)
@@ -111,8 +142,8 @@ describing that in detail.
 **Total failures observed:** 129 <br>
 **Mean failure rate:** 0.57% per year
 
-**Useful power-on length of observation:** 4.88 years <br>
-**Mean number of disks over useful length:** 4673 <br>
+**Useful power-on span of observation:** 4.88 years <br>
+**Mean number of disks over useful span:** 4673 <br>
 **Window size:** 1 month
 
 ![HGST HMS5C4040ALE640 failure rate plot]({attach}plots/02-plot.svg)
@@ -123,8 +154,8 @@ describing that in detail.
 **Total failures observed:** 128 <br>
 **Mean failure rate:** 0.58% per year
 
-**Useful power-on length of observation:** 3.51 years <br>
-**Mean number of disks over useful length:** 6317 <br>
+**Useful power-on span of observation:** 3.51 years <br>
+**Mean number of disks over useful span:** 6317 <br>
 **Window size:** 1 month
 
 ![HGST HMS5C4040BLE640 failure rate plot]({attach}plots/03-plot.svg)
@@ -135,8 +166,8 @@ describing that in detail.
 **Total failures observed:** 123 <br>
 **Mean failure rate:** 0.79% per year
 
-**Useful power-on length of observation:** 5.72 years <br>
-**Mean number of disks over useful length:** 2731 <br>
+**Useful power-on span of observation:** 5.72 years <br>
+**Mean number of disks over useful span:** 2731 <br>
 **Window size:** 45 days
 
 ![Hitachi HDS5C3030ALA630 failure rate plot]({attach}plots/04-plot.svg)
@@ -147,8 +178,8 @@ describing that in detail.
 **Total failures observed:** 202 <br>
 **Mean failure rate:** 1.70% per year
 
-**Useful power-on length of observation:** 6.11 years <br>
-**Mean number of disks over useful length:** 1944 <br>
+**Useful power-on span of observation:** 6.11 years <br>
+**Mean number of disks over useful span:** 1944 <br>
 **Window size:** 3 months
 
 ![Hitachi HDS722020ALA330 failure rate plot]({attach}plots/05-plot.svg)
@@ -159,8 +190,8 @@ describing that in detail.
 **Total failures observed:** 113 <br>
 **Mean failure rate:** 1.11% per year
 
-**Useful power-on length of observation:** 1.36 years <br>
-**Mean number of disks over useful length:** 7461 <br>
+**Useful power-on span of observation:** 1.36 years <br>
+**Mean number of disks over useful span:** 7461 <br>
 **Window size:** 15 days
 
 ![Seagate ST8000DM002 failure rate plot]({attach}plots/06-plot.svg)
@@ -171,8 +202,8 @@ describing that in detail.
 **Total failures observed:** 63 <br>
 **Mean failure rate:** 0.64% per year
 
-**Useful power-on length of observation:** 5.06 years <br>
-**Mean number of disks over useful length:** 1937 <br>
+**Useful power-on span of observation:** 5.06 years <br>
+**Mean number of disks over useful span:** 1937 <br>
 **Window size:** 2 months
 
 ![Hitachi HDS5C4040ALE630 failure rate plot]({attach}plots/07-plot.svg)
@@ -183,8 +214,8 @@ describing that in detail.
 **Total failures observed:** 59 <br>
 **Mean failure rate:** 1.24% per year
 
-**Useful power-on length of observation:** 3.15 years <br>
-**Mean number of disks over useful length:** 1502 <br>
+**Useful power-on span of observation:** 3.15 years <br>
+**Mean number of disks over useful span:** 1502 <br>
 **Window size:** 2 months
 
 ![Seagate ST6000DX000 failure rate plot]({attach}plots/08-plot.svg)
@@ -195,8 +226,8 @@ describing that in detail.
 **Total failures observed:** 44 <br>
 **Mean failure rate:** 1.20% per year
 
-**Useful power-on length of observation:** 0.83 years <br>
-**Mean number of disks over useful length:** 4370 <br>
+**Useful power-on span of observation:** 0.83 years <br>
+**Mean number of disks over useful span:** 4370 <br>
 **Window size:** 15 days
 
 ![Seagate ST8000NM0055 failure rate plot]({attach}plots/09-plot.svg)
@@ -207,8 +238,8 @@ describing that in detail.
 **Total failures observed:** 67 <br>
 **Mean failure rate:** 2.01% per year
 
-**Useful power-on length of observation:** 5.04 years <br>
-**Mean number of disks over useful length:** 659 <br>
+**Useful power-on span of observation:** 5.04 years <br>
+**Mean number of disks over useful span:** 659 <br>
 **Window size:** 3 months
 
 ![Hitachi HDS723030ALA640 failure rate plot]({attach}plots/11-plot.svg)
@@ -219,8 +250,8 @@ describing that in detail.
 **Total failures observed:** 166 <br>
 **Mean failure rate:** 5.03% per year
 
-**Useful power-on length of observation:** 4.71 years <br>
-**Mean number of disks over useful length:** 701 <br>
+**Useful power-on span of observation:** 4.71 years <br>
+**Mean number of disks over useful span:** 701 <br>
 **Window size:** 3 months
 
 ![WDC WD30EFRX failure rate plot]({attach}plots/12-plot.svg)
@@ -231,8 +262,8 @@ describing that in detail.
 **Total failures observed:** 274 <br>
 **Mean failure rate:** 9.72% per year
 
-**Useful power-on length of observation:** 5.70 years <br>
-**Mean number of disks over useful length:** 494 <br>
+**Useful power-on span of observation:** 5.70 years <br>
+**Mean number of disks over useful span:** 494 <br>
 **Window size:** 6 months
 
 ![Seagate ST31500541AS failure rate plot]({attach}plots/13-plot.svg)
@@ -243,8 +274,8 @@ describing that in detail.
 **Total failures observed:** 39 <br>
 **Mean failure rate:** 2.51% per year
 
-**Useful power-on length of observation:** 3.10 years <br>
-**Mean number of disks over useful length:** 502 <br>
+**Useful power-on span of observation:** 3.10 years <br>
+**Mean number of disks over useful span:** 502 <br>
 **Window size:** 4 months
 
 ![Seagate ST500LM012 HN failure rate plot]({attach}plots/14-plot.svg)
@@ -255,8 +286,8 @@ describing that in detail.
 **Total failures observed:** 58 <br>
 **Mean failure rate:** 4.59% per year
 
-**Useful power-on length of observation:** 3.17 years <br>
-**Mean number of disks over useful length:** 396 <br>
+**Useful power-on span of observation:** 3.17 years <br>
+**Mean number of disks over useful span:** 396 <br>
 **Window size:** 6 months
 
 ![WDC WD60EFRX failure rate plot]({attach}plots/15-plot.svg)
@@ -267,13 +298,13 @@ describing that in detail.
 **Total failures observed:** 40 <br>
 **Mean failure rate:** 4.58% per year
 
-**Useful power-on length of observation:** 3.47 years <br>
-**Mean number of disks over useful length:** 251 <br>
+**Useful power-on span of observation:** 3.47 years <br>
+**Mean number of disks over useful span:** 251 <br>
 **Window size:** 6 months
 
 ![WDC WD5000LPVX failure rate plot]({attach}plots/16-plot.svg)
 
-## Low on Data
+## Results - Low Data
 
 The following models were not as popular as the ones seen till now, and the available logs
 were insufficient to produce low-noise graphs. Even with a wider window size, failure rates
@@ -285,8 +316,8 @@ reached significantly higher values for these models. Thus Y-axis limit was rais
 **Total failures observed:** 52 <br>
 **Mean failure rate:** 6.80% per year
 
-**Useful power-on length of observation:** 5.16 years <br>
-**Mean number of disks over useful length:** 148 <br>
+**Useful power-on span of observation:** 5.16 years <br>
+**Mean number of disks over useful span:** 148 <br>
 **Window size:** 8 months
 
 ![WDC WD10EADS failure rate plot]({attach}plots/17-plot.svg)
@@ -297,8 +328,8 @@ reached significantly higher values for these models. Thus Y-axis limit was rais
 **Total failures observed:** 76 <br>
 **Mean failure rate:** 11.05% per year
 
-**Useful power-on length of observation:** 4.61 years <br>
-**Mean number of disks over useful length:** 149 <br>
+**Useful power-on span of observation:** 4.61 years <br>
+**Mean number of disks over useful span:** 149 <br>
 **Window size:** 8 months
 
 ![Seagate ST4000DX000 failure rate plot]({attach}plots/18-plot.svg)
@@ -309,8 +340,8 @@ reached significantly higher values for these models. Thus Y-axis limit was rais
 **Total failures observed:** 125 <br>
 **Mean failure rate:** 24.70% per year
 
-**Useful power-on length of observation:** 4.57 years <br>
-**Mean number of disks over useful length:** 110 <br>
+**Useful power-on span of observation:** 4.57 years <br>
+**Mean number of disks over useful span:** 110 <br>
 **Window size:** 8 months
 
 ![Seagate ST31500341AS failure rate plot]({attach}plots/19-plot.svg)
@@ -321,15 +352,15 @@ reached significantly higher values for these models. Thus Y-axis limit was rais
 **Total failures observed:** 19 <br>
 **Mean failure rate:** 4.32% per year
 
-**Useful power-on length of observation:** 3.75 years <br>
-**Mean number of disks over useful length:** 116 <br>
+**Useful power-on span of observation:** 3.75 years <br>
+**Mean number of disks over useful span:** 116 <br>
 **Window size:** 8 months
 
 ![Seagate ST33000651AS failure rate plot]({attach}plots/20-plot.svg)
 
-## A Bad Egg?
+## Results - Bad Egg?
 
-One model stood out from the rest with a staggeringly bad failure rate. Let's take a look.
+One model stood out from the rest with a staggeringly high failure rate.
 
 ### Seagate ST3000DM001
 
@@ -337,13 +368,13 @@ One model stood out from the rest with a staggeringly bad failure rate. Let's ta
 **Total failures observed:** 1454 <br>
 **Mean failure rate:** 41.78% per year
 
-**Useful power-on length of observation:** 3.28 years <br>
-**Mean number of disks over useful length:** 1060 disks <br>
+**Useful power-on span of observation:** 3.28 years <br>
+**Mean number of disks over useful span:** 1060 disks <br>
 **Window size:** 3 months
 
 ![Seagate ST3000DM001 failure rate plot]({attach}plots/10-plot.svg)
 
-_(Note: Upper-limit of Y-axis is 120%!)_
+_(Note: The upper-limit of Y-axis is 120%!)_
 
 Just to make sure the logs were sane[^sanity], I plotted the number of failures reported per
 day and the number of disks in deployment, against datestamps.
@@ -359,10 +390,9 @@ for this:
 
 - It was caused due to a hardware issue where these drives were part of, such as a faulty
   power-supply.
-- It was because the hard disks exhibit some behavior (later in age) which makes the failure
-  detection software raise "false" alarms. "False" from the perspective of the manufacturer
-  at least.
-- They were bad eggs!
+- It was because the hard disks exhibit some behavior which makes the failure detection
+  software raise "false" alarms. "False" from the perspective of the manufacturer at least.
+- They were indeed bad eggs!
 
 I'm not sure which it is, and Backblaze only had this to say about these drives[^story]:
 
@@ -371,8 +401,16 @@ I'm not sure which it is, and Backblaze only had this to say about these drives[
 
 ## Conclusions
 
+Experts claimed that this journey would end with [bathtubs][]! But it pains me to say that I
+found none yet. Perhaps the journey is incomplete.
 
+You can find all scripts and utilities that I used for generating results at [this repo][];
+from processing Backblaze data files to generation of plots.
 
+[bathtubs]: https://en.wikipedia.org/wiki/Bathtub_curve
+[this repo]: https://github.com/johncf/backblaze-proc
+
+[^wiki]: Partly borrowed from <https://en.wikipedia.org/wiki/Failure_rate>
 [^sanity]: The data released by Backblaze is of exceptionally high-quality. I've seen things
     and written queries that still haunts me at night!
 [^story]: <https://www.backblaze.com/blog/best-hard-drive-q4-2014/>
