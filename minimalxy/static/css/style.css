@@ -63,6 +63,21 @@ code, kbd, pre, samp {
   background: #81C784;
 }
 
+details > summary {
+  cursor: pointer;
+  color: #4CAF50;
+}
+
+details > summary::before {
+  content: "▸";
+  color: black;
+  margin-right: 4px;
+}
+
+details[open] > summary::before {
+  content: "▾";
+}
+
 
 
 /* Classes */
