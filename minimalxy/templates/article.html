@@ -47,7 +47,7 @@
           <div class="adjust-width">
             <div id="author-block" class="w3-light-grey w3-border">
               <div id="author-info">
-                <img style="width: 70px; height: 70px; border-radius: 50%" src="{{ AUTHOR_AVATAR }}" onerror="this.src='theme/images/avatar.png'" alt="Avatar" />
+                <img style="width: 70px; height: 70px; border-radius: 50%" src="{{ AUTHOR_AVATAR }}" onerror="this.src='/theme/images/avatar.png'" alt="Avatar" />
                 <div style="margin-left: 20px;">
                   <span id="author-name" class="w3-hover-text-dark-grey">{{ article.author }}</span>
                   <p id="author-story">{% if article.author==AUTHOR %}{{ AUTHOR_DESCRIPTION }}{% endif %}</p>
