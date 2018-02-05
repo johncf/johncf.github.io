@@ -1,13 +1,16 @@
 Title: Disk Failure Analysis using Backblaze Data
 
-Backblaze has been doing an amazing job of publicly releasing hard disk logs from their data
-centers in a very clean and easy-to-use format since 2013. I came across these while I was
-doing a project on reliability analysis at my University in collaboration with NetApp.
+Backblaze has been doing an amazing job of publicly releasing hard drive logs from their
+data centers in a clean and easy-to-use format since 2013. I came across these while I was
+doing a project on reliability analysis at my University in collaboration with NetApp. This
+article describes a part of my project where I crunched such logs to obtain failure rate of
+hard disks as a "continuous" function of its age.
 
-This article describes an interesting part of my project where I analyzed real-world data to
-obtain failure rate of hard disks as a "continuous" function of its age.
+<details><summary> Table of Contents</summary>
 
 [TOC]
+
+</details>
 
 ## On Failure Rates
 
@@ -32,7 +35,7 @@ as 0.125 per month, since a natural interpretation of failure rate is as the fra
 population that is expected to fail with a unit of time. Furthermore, it is often expressed
 in percentage (e.g. 12.5% per month or 150% per year) rather than a simple fraction.
 
-### Calculation
+### Estimation
 
 Let's take a simple example. Suppose we observed 20 failures over 2 months from a population
 of 1000 devices, then the (average) failure rate is
@@ -71,32 +74,29 @@ interesting to study failure rates with respect to age, rather than actual time.
 we simply map the events of interest (those discussed in previous section) from time-domain
 to the age-domain. Let's look at a small example of this mapping.
 
-Suppose we have 2 hard drives -- one brand new and the other a year old. They were kept in
-operation for 2 years, but the newer one failed during the second year of operation when it
-was exactly 500 days old. Here's the time-domain plot of these events:
+Suppose we have 2 hard disks -- "disk-1" is brand new and "disk-2" is 365 days old. Both of
+them are kept in operation for the next two years. On 500th day of operation, the newer disk
+(disk-1) fails and is removed, but disk-2 kept working for the entire two years. Here's the
+time-domain plot of these events:
 
 ![Time-domain events]({attach}plots/time-domain.svg)
 
-Red dashed-line indicates the failure event. The older drive was operational for the entire
-2 years (730 days), making it 1095 days old at the end.
-
-Here is the same mapped to the age-domain:
+Red dashed-line indicates the failure event. Note that the older disk-2, after two years
+(730 days) of operation, will be 1095 days old. Here's the same in age-domain:
 
 ![Age-domain events]({attach}plots/age-domain.svg)
 
-To calculate the (average) failure rate in a specific window of age, count the number of
-failures in that window ($N_f$), and calculate the area under "Number of disks vs. Age"
-graph (blue) in that window to get the corresponding disk-time ($D$). Then failure rate,
-$\lambda = N_f / D$.
+After this, the same principles I described in the previous sub-section apply, so as to
+calculate failure rates at various points of age.
 
-_Sidenote: For hard drives, age is best represented by power-on time, since the
+_Sidenote: For hard disks, age is best represented by power-on time, since the
 [self-monitoring system][SMART] present in most drives contain power-on hours attribute._
 
 [SMART]: https://en.wikipedia.org/wiki/S.M.A.R.T.
 
 ## The Methodology
 
-1.  From disk logs, construct
+1.  Using disk logs, construct
     - The number of disks observed as a function of power-on time ($N(t)$).
     - The cumulative number of failures as a function of power-on time ($C(t)$).
 2.  Apply [Savitzky-Golay filter][] (a smoothing technique) with polynomial-order 1 and a
