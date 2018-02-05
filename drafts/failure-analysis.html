@@ -17,7 +17,7 @@
 
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Disk Failure Analysis using Backblaze Data"/>
-    <meta property="og:description" content="Backblaze has been doing an amazing job of publicly releasing hard disk logs from their data centers in a very clean and easy-to-use format since 2013. I came across these while I was doing a project on reliability analysis at my University in collaboration with NetApp. This article describes an …"/>
+    <meta property="og:description" content="Backblaze has been doing an amazing job of publicly releasing hard drive logs from their data centers in a clean and easy-to-use format since 2013. I came across these while I was doing a project on reliability analysis at my University in collaboration with NetApp. This article describes a part …"/>
     <meta property="og:url" content="https://johncf.github.io/drafts/failure-analysis.html"/>
     <meta property="og:site_name" content="In Short" />
     <meta name="twitter:card" content="summary">
@@ -77,15 +77,16 @@
 
       <div class="col-main w3-container">
         <section id="content">
-          <p>Backblaze has been doing an amazing job of publicly releasing hard disk logs from their data
-centers in a very clean and easy-to-use format since 2013. I came across these while I was
-doing a project on reliability analysis at my University in collaboration with NetApp.</p>
-<p>This article describes an interesting part of my project where I analyzed real-world data to
-obtain failure rate of hard disks as a "continuous" function of its age.</p>
+          <p>Backblaze has been doing an amazing job of publicly releasing hard drive logs from their
+data centers in a clean and easy-to-use format since 2013. I came across these while I was
+doing a project on reliability analysis at my University in collaboration with NetApp. This
+article describes a part of my project where I crunched such logs to obtain failure rate of
+hard disks as a "continuous" function of its age.</p>
+<p><details><summary> Table of Contents</summary></p>
 <div class="toc">
 <ul>
 <li><a href="#on-failure-rates">On Failure Rates</a><ul>
-<li><a href="#calculation">Calculation</a></li>
+<li><a href="#estimation">Estimation</a></li>
 <li><a href="#age">Age</a></li>
 </ul>
 </li>
@@ -123,6 +124,7 @@ obtain failure rate of hard disks as a "continuous" function of its age.</p>
 <li><a href="#conclusions">Conclusions</a></li>
 </ul>
 </div>
+<p></details></p>
 <h2 id="on-failure-rates">On Failure Rates</h2>
 <blockquote>
 <p><strong>Failure Rate</strong> is the frequency with which a device fails (or is expected to fail),
@@ -145,7 +147,7 @@ higher than 1. Continuing previous example, 1.5 per year is more intuitive to be
 as 0.125 per month, since a natural interpretation of failure rate is as the fraction of
 population that is expected to fail with a unit of time. Furthermore, it is often expressed
 in percentage (e.g. 12.5% per month or 150% per year) rather than a simple fraction.</p>
-<h3 id="calculation">Calculation</h3>
+<h3 id="estimation">Estimation</h3>
 <p>Let's take a simple example. Suppose we observed 20 failures over 2 months from a population
 of 1000 devices, then the (average) failure rate is</p>
 <div class="math">$$ \frac{20/1000}{2~\text{months}} = 0.01~\text{per month} = 1\%~\text{per month} =
@@ -175,23 +177,21 @@ device-months), and the failure rate is:</p>
 interesting to study failure rates with respect to age, rather than actual time. For this,
 we simply map the events of interest (those discussed in previous section) from time-domain
 to the age-domain. Let's look at a small example of this mapping.</p>
-<p>Suppose we have 2 hard drives -- one brand new and the other a year old. They were kept in
-operation for 2 years, but the newer one failed during the second year of operation when it
-was exactly 500 days old. Here's the time-domain plot of these events:</p>
+<p>Suppose we have 2 hard disks -- "disk-1" is brand new and "disk-2" is 365 days old. Both of
+them are kept in operation for the next two years. On 500th day of operation, the newer disk
+(disk-1) fails and is removed, but disk-2 kept working for the entire two years. Here's the
+time-domain plot of these events:</p>
 <p><img alt="Time-domain events" src="https://johncf.github.io/drafts/plots/time-domain.svg"></p>
-<p>Red dashed-line indicates the failure event. The older drive was operational for the entire
-2 years (730 days), making it 1095 days old at the end.</p>
-<p>Here is the same mapped to the age-domain:</p>
+<p>Red dashed-line indicates the failure event. Note that the older disk-2, after two years
+(730 days) of operation, will be 1095 days old. Here's the same in age-domain:</p>
 <p><img alt="Age-domain events" src="https://johncf.github.io/drafts/plots/age-domain.svg"></p>
-<p>To calculate the (average) failure rate in a specific window of age, count the number of
-failures in that window (<span class="math">\(N_f\)</span>), and calculate the area under "Number of disks vs. Age"
-graph (blue) in that window to get the corresponding disk-time (<span class="math">\(D\)</span>). Then failure rate,
-<span class="math">\(\lambda = N_f / D\)</span>.</p>
-<p><em>Sidenote: For hard drives, age is best represented by power-on time, since the
+<p>After this, the same principles I described in the previous sub-section apply, so as to
+calculate failure rates at various points of age.</p>
+<p><em>Sidenote: For hard disks, age is best represented by power-on time, since the
 <a href="https://en.wikipedia.org/wiki/S.M.A.R.T.">self-monitoring system</a> present in most drives contain power-on hours attribute.</em></p>
 <h2 id="the-methodology">The Methodology</h2>
 <ol>
-<li>From disk logs, construct<ul>
+<li>Using disk logs, construct<ul>
 <li>The number of disks observed as a function of power-on time (<span class="math">\(N(t)\)</span>).</li>
 <li>The cumulative number of failures as a function of power-on time (<span class="math">\(C(t)\)</span>).</li>
 </ul>
