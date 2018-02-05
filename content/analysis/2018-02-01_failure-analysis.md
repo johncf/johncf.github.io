@@ -402,12 +402,14 @@ I'm not sure which it is, and Backblaze only had this to say about these drives[
 ## Conclusions
 
 Experts claimed that this journey would end with [bathtubs][]! But it pains me to say that I
-found none yet. Perhaps the journey is incomplete.
+found none yet. Perhaps [forces][] are at play that prevents their manifestation, or perhaps
+the journey is incomplete.
 
-You can find all scripts and utilities that I used for generating results at [this repo][];
+You can find all scripts and utilities I used for generating results at [this repo][];
 from processing Backblaze data files to generation of plots.
 
 [bathtubs]: https://en.wikipedia.org/wiki/Bathtub_curve
+[forces]: https://en.wikipedia.org/wiki/Burn-in
 [this repo]: https://github.com/johncf/backblaze-proc
 
 [^wiki]: Partly borrowed from <https://en.wikipedia.org/wiki/Failure_rate>
