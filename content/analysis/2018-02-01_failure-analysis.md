@@ -1,16 +1,26 @@
-Title: Disk Failure Analysis using Backblaze Data
+Title: Does Older Hard Drives Fail Faster?
 Thanks: Aby Sam Ross for reviewing the article.
 
-Backblaze has been doing an amazing job of publicly releasing hard drive logs from their
-data centers in a clean and easy-to-use format since 2013. I came across these while I was
-doing a project on reliability analysis at my University in collaboration with NetApp. This
-article describes a part of my project where I crunched such logs to obtain failure rate of
-hard disks as a "continuous" function of its age.
+Having to deal with multiple failures on a daily basis in a large datacenter is quite
+normal. However, having unexpectedly high number of failures can pose a threat to data
+reliability. The simplest method to minimize unexpected failures is to replace older devices
+with newer ones on a regular basis. The question is, how long should we keep them before
+returning &mdash; how long would they work reliably enough so as to keep the number of
+failures low.
+
+Backblaze (a company providing online storage services) has been doing an amazing job of
+publicly releasing their well-sanitized hard drive logs in an easily consumable form since
+2015[^bb-pub-rel]. I came across these while I was doing a project on reliability analysis
+at my University in collaboration with NetApp. This article describes a part of my project
+where I crunched such logs to obtain failure rate of hard drives as a "continuous" function
+of its age, which might help in answering the above question.
 
 You can find all scripts and utilities I used for generating results at [this repo][];
 from processing Backblaze data files to generation of plots.
 
 [this repo]: https://github.com/johncf/backblaze-proc
+
+[^bb-pub-rel]: <https://www.backblaze.com/blog/hard-drive-data-feb2015/>
 
 <details><summary> Table of Contents</summary>
 
@@ -80,10 +90,10 @@ it seems more interesting to study failure rates with respect to age, rather tha
 time. For this, we simply map the events of interest (those discussed in previous section)
 from time-domain to the age-domain. Let's look at a small example of this mapping.
 
-Suppose we have 2 hard disks -- "disk-1" is brand new and "disk-2" is 365 days old. Both of
-them are kept in operation for the next two years. On 500th day of operation, the newer disk
-(disk-1) fails and is removed, but disk-2 kept working for the entire two years. Here's the
-time-domain plot of these events:
+Suppose we have 2 hard disks &mdash; "disk-1" is brand new and "disk-2" is 365 days old.
+Both of them are kept in operation for the next two years. On 500th day of operation, the
+newer disk (disk-1) fails and is removed, but disk-2 kept working for the entire two years.
+Here's the time-domain plot of these events:
 
 ![Time-domain events]({attach}plots/time-domain.svg)
 
