@@ -1,12 +1,13 @@
 Title: Does Older Hard Drives Fail Faster?
 Thanks: Aby Sam Ross for reviewing the article.
+Status: published
 
 Having to deal with multiple failures on a daily basis in a large datacenter is quite
-normal. However, having unexpectedly high number of failures can pose a threat to data
-reliability. The simplest method to minimize unexpected failures is to replace older devices
+normal. However, an unexpectedly high number of failures can pose a threat to data
+reliability. The simplest method to minimize such failures is to replace older devices
 with newer ones on a regular basis. The question is, how long should we keep them before
 returning &mdash; how long would they work reliably enough so as to keep the number of
-failures low.
+failures low?
 
 Backblaze (a company providing cloud storage services) has been doing an amazing job of
 publicly releasing their well-sanitized hard drive logs in an easily consumable form since
