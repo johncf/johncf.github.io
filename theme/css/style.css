@@ -43,6 +43,7 @@ a img:hover {
 article {
   font-size: 13pt;
   padding-top: 0;
+  margin-top: 3rem;
 }
 
 abbr[title] {
@@ -135,6 +136,11 @@ ul.social li a:hover {
 
 div.footnote {
   font-size: 8pt;
+}
+
+div.thanks {
+  font-size: 10pt;
+  padding: 0 40px;
 }
 
 
