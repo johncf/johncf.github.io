@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Disk Failure Analysis using Backblaze Data &ndash; In Short</title>
+    <title>Does Older Hard Drives Fail Faster? &ndash; In Short</title>
 
     <!-- Meta -->
     <meta name="description" content="In Short &ndash; ">
@@ -16,8 +16,8 @@
     <meta property="article:published_time" content="2018-02-01" />
 
     <meta property="og:type" content="article"/>
-    <meta property="og:title" content="Disk Failure Analysis using Backblaze Data"/>
-    <meta property="og:description" content="Backblaze has been doing an amazing job of publicly releasing hard drive logs from their data centers in a clean and easy-to-use format since 2013. I came across these while I was doing a project on reliability analysis at my University in collaboration with NetApp. This article describes a part …"/>
+    <meta property="og:title" content="Does Older Hard Drives Fail Faster?"/>
+    <meta property="og:description" content="Having to deal with multiple failures on a daily basis in a large datacenter is quite normal. However, having unexpectedly high number of failures can pose a threat to data reliability. The simplest method to minimize unexpected failures is to replace older devices with newer ones on a regular basis …"/>
     <meta property="og:url" content="https://johncf.github.io/drafts/failure-analysis.html"/>
     <meta property="og:site_name" content="In Short" />
     <meta name="twitter:card" content="summary">
@@ -64,7 +64,7 @@
 
     <article>
       <header class="w3-container col-main">
-        <h1>Disk Failure Analysis using Backblaze Data</h1>
+        <h1>Does Older Hard Drives Fail Faster?</h1>
         <div class="post-info">
           <div class="w3-opacity w3-margin-right w3-margin-bottom" style="flex-grow: 1;">
             <span><time datetime="2018-02-01T00:00:00+05:30">Thu 01 February 2018</time> in <a href="https://johncf.github.io/category/analysis.html" title="All articles in category analysis">analysis</a></span>
@@ -77,11 +77,18 @@
 
       <div class="col-main w3-container">
         <section id="content">
-          <p>Backblaze has been doing an amazing job of publicly releasing hard drive logs from their
-data centers in a clean and easy-to-use format since 2013. I came across these while I was
-doing a project on reliability analysis at my University in collaboration with NetApp. This
-article describes a part of my project where I crunched such logs to obtain failure rate of
-hard disks as a "continuous" function of its age.</p>
+          <p>Having to deal with multiple failures on a daily basis in a large datacenter is quite
+normal. However, having unexpectedly high number of failures can pose a threat to data
+reliability. The simplest method to minimize unexpected failures is to replace older devices
+with newer ones on a regular basis. The question is, how long should we keep them before
+returning &mdash; how long would they work reliably enough so as to keep the number of
+failures low.</p>
+<p>Backblaze (a company providing online storage services) has been doing an amazing job of
+publicly releasing their well-sanitized hard drive logs in an easily consumable form since
+2015<sup id="fnref:bb-pub-rel"><a class="footnote-ref" href="#fn:bb-pub-rel" rel="footnote">1</a></sup>. I came across these while I was doing a project on reliability analysis
+at my University in collaboration with NetApp. This article describes a part of my project
+where I crunched such logs to obtain failure rate of hard drives as a "continuous" function
+of its age, which might help in answering the above question.</p>
 <p>You can find all scripts and utilities I used for generating results at <a href="https://github.com/johncf/backblaze-proc">this repo</a>;
 from processing Backblaze data files to generation of plots.</p>
 <p><details><summary> Table of Contents</summary></p>
@@ -130,7 +137,7 @@ from processing Backblaze data files to generation of plots.</p>
 <h2 id="on-failure-rates">On Failure Rates</h2>
 <blockquote>
 <p><strong>Failure Rate</strong> is the frequency with which a device fails (or is expected to fail),
-expressed in failures per unit time.<sup id="fnref:wiki"><a class="footnote-ref" href="#fn:wiki" rel="footnote">1</a></sup></p>
+expressed in failures per unit time.<sup id="fnref:wiki"><a class="footnote-ref" href="#fn:wiki" rel="footnote">2</a></sup></p>
 </blockquote>
 <p>For instance, a manufacturer may specify the failure rate of a device to be 0.5 failures per
 year. We may interpret it in two ways:</p>
@@ -179,10 +186,10 @@ device-months), and the failure rate is:</p>
 it seems more interesting to study failure rates with respect to age, rather than actual
 time. For this, we simply map the events of interest (those discussed in previous section)
 from time-domain to the age-domain. Let's look at a small example of this mapping.</p>
-<p>Suppose we have 2 hard disks -- "disk-1" is brand new and "disk-2" is 365 days old. Both of
-them are kept in operation for the next two years. On 500th day of operation, the newer disk
-(disk-1) fails and is removed, but disk-2 kept working for the entire two years. Here's the
-time-domain plot of these events:</p>
+<p>Suppose we have 2 hard disks &mdash; "disk-1" is brand new and "disk-2" is 365 days old.
+Both of them are kept in operation for the next two years. On 500th day of operation, the
+newer disk (disk-1) fails and is removed, but disk-2 kept working for the entire two years.
+Here's the time-domain plot of these events:</p>
 <p><img alt="Time-domain events" src="https://johncf.github.io/drafts/plots/time-domain.svg" /></p>
 <p>Red dashed-line indicates the failure event. Note that the older disk-2, after two years
 (730 days) of operation, will be 1095 days old. Here's the same in age-domain:</p>
@@ -391,7 +398,7 @@ reached significantly higher values for these models. Thus Y-axis limit was rais
 <strong>Window size:</strong> 3 months</p>
 <p><img alt="Seagate ST3000DM001 failure rate plot" src="https://johncf.github.io/drafts/plots/10-plot.svg" /></p>
 <p><em>(Note: The upper-limit of Y-axis is 120%!)</em></p>
-<p>Just to make sure the logs were sane<sup id="fnref:sanity"><a class="footnote-ref" href="#fn:sanity" rel="footnote">2</a></sup>, I plotted the number of failures reported per
+<p>Just to make sure the logs were sane<sup id="fnref:sanity"><a class="footnote-ref" href="#fn:sanity" rel="footnote">3</a></sup>, I plotted the number of failures reported per
 day and the number of disks in deployment, against datestamps.</p>
 <p><img alt="Seagate ST3000DM001 daily stats plot" src="https://johncf.github.io/drafts/plots/daily-stats-10.svg" /></p>
 <p>For comparison, below is the same for the most popular model.</p>
@@ -405,7 +412,7 @@ for this:</p>
   software raise "false" alarms. "False" from the perspective of the manufacturer at least.</li>
 <li>They were indeed bad eggs!</li>
 </ul>
-<p>I'm not sure which it is, and Backblaze only had this to say about these drives<sup id="fnref:story"><a class="footnote-ref" href="#fn:story" rel="footnote">3</a></sup>:</p>
+<p>I'm not sure which it is, and Backblaze only had this to say about these drives<sup id="fnref:story"><a class="footnote-ref" href="#fn:story" rel="footnote">4</a></sup>:</p>
 <blockquote>
 <p>The Seagate Barracuda 7200.14 3 TB drives are another story. We’ll cover how we handled
 their failure rates in a future blog post [that never came].</p>
@@ -424,15 +431,18 @@ manifestation, or perhaps the journey is incomplete.</p>
 <div class="footnote">
 <hr />
 <ol>
+<li id="fn:bb-pub-rel">
+<p><a href="https://www.backblaze.com/blog/hard-drive-data-feb2015/">https://www.backblaze.com/blog/hard-drive-data-feb2015/</a>&#160;<a class="footnote-backref" href="#fnref:bb-pub-rel" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
 <li id="fn:wiki">
-<p>Partly borrowed from <a href="https://en.wikipedia.org/wiki/Failure_rate">https://en.wikipedia.org/wiki/Failure_rate</a>&#160;<a class="footnote-backref" href="#fnref:wiki" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>Partly borrowed from <a href="https://en.wikipedia.org/wiki/Failure_rate">https://en.wikipedia.org/wiki/Failure_rate</a>&#160;<a class="footnote-backref" href="#fnref:wiki" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 <li id="fn:sanity">
 <p>The data released by Backblaze is of exceptionally high-quality. I've seen things
-and written queries that still haunts me at night!&#160;<a class="footnote-backref" href="#fnref:sanity" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+and written queries that still haunts me at night!&#160;<a class="footnote-backref" href="#fnref:sanity" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
 </li>
 <li id="fn:story">
-<p><a href="https://www.backblaze.com/blog/best-hard-drive-q4-2014/">https://www.backblaze.com/blog/best-hard-drive-q4-2014/</a>&#160;<a class="footnote-backref" href="#fnref:story" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+<p><a href="https://www.backblaze.com/blog/best-hard-drive-q4-2014/">https://www.backblaze.com/blog/best-hard-drive-q4-2014/</a>&#160;<a class="footnote-backref" href="#fnref:story" rev="footnote" title="Jump back to footnote 4 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
@@ -518,10 +528,10 @@ and written queries that still haunts me at night!&#160;<a class="footnote-backr
 
           <p style="font-size:10pt; font-style: italic;">Did you like this article? Share it with your friends!</p>
           <div id="share" class="share">
-            <a href="https://www.facebook.com/sharer.php?u=https%3A//johncf.github.io/drafts/failure-analysis.html&amp;t=Disk%20Failure%20Analysis%20using%20Backblaze%20Data%20-%20In%20Short" target="_blank" class="w3-btn w3-indigo">
+            <a href="https://www.facebook.com/sharer.php?u=https%3A//johncf.github.io/drafts/failure-analysis.html&amp;t=Does%20Older%20Hard%20Drives%20Fail%20Faster%3F%20-%20In%20Short" target="_blank" class="w3-btn w3-indigo">
               <i class="fa fa-facebook"></i>
             </a>
-            <a href="https://twitter.com/share?url=https%3A//johncf.github.io/drafts/failure-analysis.html&amp;text=Disk%20Failure%20Analysis%20using%20Backblaze%20Data%20-%20In%20Short" target="_blank" class="w3-btn w3-blue">
+            <a href="https://twitter.com/share?url=https%3A//johncf.github.io/drafts/failure-analysis.html&amp;text=Does%20Older%20Hard%20Drives%20Fail%20Faster%3F%20-%20In%20Short" target="_blank" class="w3-btn w3-blue">
               <i class="fa fa-twitter"></i>
             </a>
             <a href="https://plus.google.com/share?url=https%3A//johncf.github.io/drafts/failure-analysis.html" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" class="w3-btn w3-red">
