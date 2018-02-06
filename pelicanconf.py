@@ -61,7 +61,7 @@ REMARKBOX_KEY = 'da0795d2-039b-11e8-86c9-040140774501'
 AUTHOR_TWITTER = 'jcf256'
 SOCIAL = (
     ('envelope', 'mailto:john.ch.fr@gmail.com'),
-    ('twitter', 'http://twitter.com/' + AUTHOR_TWITTER),
+    ('twitter', 'https://twitter.com/' + AUTHOR_TWITTER),
     ('github', 'https://github.com/johncf'),
     ('gitlab', 'https://gitlab.com/johncf'),
 )
