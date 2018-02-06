@@ -47,8 +47,10 @@
     <div class="w3-row w3-card w3-white">
       <header id="header">
         <h2 class="main-title">
-        <a href="https://johncf.github.io/" id="header-logo" title="Home">01</a><span>In Short</span>
-        </h1>
+          <a href="https://johncf.github.io/" title="Home">
+            <span id="header-logo">01</span><span>In Short</span>
+          </a>
+        </h2>
         <nav id="header-menu">
           <ul>
             <li class="w3-bottombar w3-border-white w3-hover-border-green" ><a href="https://johncf.github.io/category/meta.html">meta</a></li>
@@ -82,6 +84,8 @@ data centers in a clean and easy-to-use format since 2013. I came across these w
 doing a project on reliability analysis at my University in collaboration with NetApp. This
 article describes a part of my project where I crunched such logs to obtain failure rate of
 hard disks as a "continuous" function of its age.</p>
+<p>You can find all scripts and utilities I used for generating results at <a href="https://github.com/johncf/backblaze-proc">this repo</a>;
+from processing Backblaze data files to generation of plots.</p>
 <p><details><summary> Table of Contents</summary></p>
 <div class="toc">
 <ul>
@@ -173,10 +177,10 @@ contributed 20 device-months, and 120 failed devices in second month contributed
 device-months), and the failure rate is:</p>
 <div class="math">$$ \frac{160}{3880~\text{device-months}} = 4.1\%~\text{per month} $$</div>
 <h3 id="age">Age</h3>
-<p>Age is a key factor that affects a device's risk of failure. Therefore, it is more
-interesting to study failure rates with respect to age, rather than actual time. For this,
-we simply map the events of interest (those discussed in previous section) from time-domain
-to the age-domain. Let's look at a small example of this mapping.</p>
+<p>Age of a device is believed to be a key factor that affects its risk of failing. Therefore,
+it seems more interesting to study failure rates with respect to age, rather than actual
+time. For this, we simply map the events of interest (those discussed in previous section)
+from time-domain to the age-domain. Let's look at a small example of this mapping.</p>
 <p>Suppose we have 2 hard disks -- "disk-1" is brand new and "disk-2" is 365 days old. Both of
 them are kept in operation for the next two years. On 500th day of operation, the newer disk
 (disk-1) fails and is removed, but disk-2 kept working for the entire two years. Here's the
@@ -186,7 +190,7 @@ time-domain plot of these events:</p>
 (730 days) of operation, will be 1095 days old. Here's the same in age-domain:</p>
 <p><img alt="Age-domain events" src="https://johncf.github.io/drafts/plots/age-domain.svg"></p>
 <p>After this, the same principles I described in the previous sub-section apply, so as to
-calculate failure rates at various points of age.</p>
+calculate failure rates at various points (or regions) of age.</p>
 <p><em>Sidenote: For hard disks, age is best represented by power-on time, since the
 <a href="https://en.wikipedia.org/wiki/S.M.A.R.T.">self-monitoring system</a> present in most drives contain power-on hours attribute.</em></p>
 <h2 id="the-methodology">The Methodology</h2>
@@ -260,6 +264,8 @@ window.</p>
 <strong>Mean number of disks over useful span:</strong> 1944 <br>
 <strong>Window size:</strong> 3 months</p>
 <p><img alt="Hitachi HDS722020ALA330 failure rate plot" src="https://johncf.github.io/drafts/plots/05-plot.svg"></p>
+<p><em>(Note: The initial spikes in failure rate are in a region with less than 100 disks
+observed.)</em></p>
 <h3 id="seagate-st8000dm002">Seagate ST8000DM002</h3>
 <p><strong>Total disk-years observed:</strong> 10191 <br>
 <strong>Total failures observed:</strong> 113 <br>
@@ -407,11 +413,16 @@ for this:</p>
 their failure rates in a future blog post [that never came].</p>
 </blockquote>
 <h2 id="conclusions">Conclusions</h2>
-<p>Experts claimed that this journey would end with <a href="https://en.wikipedia.org/wiki/Bathtub_curve">bathtubs</a>! But it pains me to say that I
-found none yet. Perhaps <a href="https://en.wikipedia.org/wiki/Burn-in">forces</a> are at play that prevents their manifestation, or perhaps
-the journey is incomplete.</p>
-<p>You can find all scripts and utilities I used for generating results at <a href="https://github.com/johncf/backblaze-proc">this repo</a>;
-from processing Backblaze data files to generation of plots.</p>
+<p>The method I presented is useful for investigating dependence of failure rate on age of
+drives. In particular, the method is focused on the span of age over which a fair amount of
+data is available.</p>
+<p>Only looking at the failure rate trend of the <a href="#seagate-st4000dm000">most popular model</a>,
+one might be tempted conclude that hard drives have a higher risk of failing as they age.
+But most other models seem unaffected by age (within the observed span), and
+<a href="#wdc-wd30efrx">some</a> even show a decreasing trend.</p>
+<p>Experts claimed that this journey would produce <a href="https://en.wikipedia.org/wiki/Bathtub_curve">bathtubs</a>! However, none of what I
+produced matches that description. Perhaps <a href="https://en.wikipedia.org/wiki/Burn-in">forces</a> are at play that prevents their
+manifestation, or perhaps the journey is incomplete.</p>
 <div class="footnote">
 <hr>
 <ol>
