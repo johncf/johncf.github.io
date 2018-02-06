@@ -39,6 +39,14 @@
       <div class="col-main w3-container">
         <section id="content">
           {{article.content}}
+
+          {% if article.thanks %}
+          <hr>
+          <div class="thanks">
+            Special thanks to
+            {{ article.thanks }}
+          </div>
+          {% endif %}
         </section>
 
         <br><br><br>

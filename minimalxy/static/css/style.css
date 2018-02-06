@@ -137,6 +137,11 @@ div.footnote {
   font-size: 8pt;
 }
 
+div.thanks {
+  font-size: 10pt;
+  padding: 0 40px;
+}
+
 
 
 /* Ids */
