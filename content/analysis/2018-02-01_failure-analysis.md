@@ -10,7 +10,7 @@ failures low.
 
 Backblaze (a company providing online storage services) has been doing an amazing job of
 publicly releasing their well-sanitized hard drive logs in an easily consumable form since
-2015[^bb-pub-rel]. I came across these while I was doing a project on reliability analysis
+2015[^bb-release]. I came across these while I was doing a project on reliability analysis
 at my University in collaboration with NetApp. This article describes a part of my project
 where I crunched such logs to obtain failure rate of hard drives as a "continuous" function
 of its age, which might help in answering the above question.
@@ -20,7 +20,7 @@ from processing Backblaze data files to generation of plots.
 
 [this repo]: https://github.com/johncf/backblaze-proc
 
-[^bb-pub-rel]: <https://www.backblaze.com/blog/hard-drive-data-feb2015/>
+[^bb-release]: <https://www.backblaze.com/blog/hard-drive-data-feb2015/>
 
 <details><summary> Table of Contents</summary>
 
@@ -103,7 +103,10 @@ Red dashed-line indicates the failure event. Note that the older disk-2, after t
 ![Age-domain events]({attach}plots/age-domain.svg)
 
 After this, the same principles I described in the previous sub-section apply, so as to
-calculate failure rates at various points (or regions) of age.
+calculate failure rates at various points (or regions) of age. For the above (extremely
+limited) example, the average failure rate during the second year of age (365-730 days) is
+
+$$ \frac{1}{2 \times 135 + 230~\text{disk-days}} = 0.2\%~\text{per day} $$
 
 _Sidenote: For hard disks, age is best represented by power-on time, since the
 [self-monitoring system][SMART] present in most drives contain power-on hours attribute._
@@ -425,7 +428,7 @@ drives. In particular, the method is focused on the span of age over which a fai
 data is available.
 
 Only looking at the failure rate trend of the [most popular model](#seagate-st4000dm000),
-one might be tempted conclude that hard drives have a higher risk of failing as they age.
+one might be tempted to conclude that hard drives have a higher risk of failing as they age.
 But most other models seem unaffected by age (within the observed span), and
 [some](#wdc-wd30efrx) even show a decreasing trend.
 
