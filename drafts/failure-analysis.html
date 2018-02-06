@@ -85,7 +85,7 @@ returning &mdash; how long would they work reliably enough so as to keep the num
 failures low.</p>
 <p>Backblaze (a company providing online storage services) has been doing an amazing job of
 publicly releasing their well-sanitized hard drive logs in an easily consumable form since
-2015<sup id="fnref:bb-pub-rel"><a class="footnote-ref" href="#fn:bb-pub-rel" rel="footnote">1</a></sup>. I came across these while I was doing a project on reliability analysis
+2015<sup id="fnref:bb-release"><a class="footnote-ref" href="#fn:bb-release" rel="footnote">1</a></sup>. I came across these while I was doing a project on reliability analysis
 at my University in collaboration with NetApp. This article describes a part of my project
 where I crunched such logs to obtain failure rate of hard drives as a "continuous" function
 of its age, which might help in answering the above question.</p>
@@ -195,7 +195,9 @@ Here's the time-domain plot of these events:</p>
 (730 days) of operation, will be 1095 days old. Here's the same in age-domain:</p>
 <p><img alt="Age-domain events" src="https://johncf.github.io/drafts/plots/age-domain.svg" /></p>
 <p>After this, the same principles I described in the previous sub-section apply, so as to
-calculate failure rates at various points (or regions) of age.</p>
+calculate failure rates at various points (or regions) of age. For the above (extremely
+limited) example, the average failure rate during the second year of age (365-730 days) is</p>
+<div class="math">$$ \frac{1}{2 \times 135 + 230~\text{disk-days}} = 0.2\%~\text{per day} $$</div>
 <p><em>Sidenote: For hard disks, age is best represented by power-on time, since the
 <a href="https://en.wikipedia.org/wiki/S.M.A.R.T.">self-monitoring system</a> present in most drives contain power-on hours attribute.</em></p>
 <h2 id="the-methodology">The Methodology</h2>
@@ -422,7 +424,7 @@ their failure rates in a future blog post [that never came].</p>
 drives. In particular, the method is focused on the span of age over which a fair amount of
 data is available.</p>
 <p>Only looking at the failure rate trend of the <a href="#seagate-st4000dm000">most popular model</a>,
-one might be tempted conclude that hard drives have a higher risk of failing as they age.
+one might be tempted to conclude that hard drives have a higher risk of failing as they age.
 But most other models seem unaffected by age (within the observed span), and
 <a href="#wdc-wd30efrx">some</a> even show a decreasing trend.</p>
 <p>Experts claimed that this journey would produce <a href="https://en.wikipedia.org/wiki/Bathtub_curve">bathtubs</a>! However, none of what I
@@ -431,8 +433,8 @@ manifestation, or perhaps the journey is incomplete.</p>
 <div class="footnote">
 <hr />
 <ol>
-<li id="fn:bb-pub-rel">
-<p><a href="https://www.backblaze.com/blog/hard-drive-data-feb2015/">https://www.backblaze.com/blog/hard-drive-data-feb2015/</a>&#160;<a class="footnote-backref" href="#fnref:bb-pub-rel" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<li id="fn:bb-release">
+<p><a href="https://www.backblaze.com/blog/hard-drive-data-feb2015/">https://www.backblaze.com/blog/hard-drive-data-feb2015/</a>&#160;<a class="footnote-backref" href="#fnref:bb-release" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 <li id="fn:wiki">
 <p>Partly borrowed from <a href="https://en.wikipedia.org/wiki/Failure_rate">https://en.wikipedia.org/wiki/Failure_rate</a>&#160;<a class="footnote-backref" href="#fnref:wiki" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
