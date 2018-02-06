@@ -4,13 +4,17 @@ body {
   margin: 0px;
   padding: 0px;
   background-color: #fcfcfc;
-  font-family: 'Noto Sans', sans-serif;
+  font-family: 'Noto Serif', serif;
   font-size: 12pt;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Noto Sans', sans-serif;
   line-height: 1.1;
+}
+
+header, footer, .post-info {
+  font-family: 'Noto Sans', sans-serif;
 }
 
 h1 {
