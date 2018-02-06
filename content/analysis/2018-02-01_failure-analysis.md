@@ -31,7 +31,7 @@ year. We may interpret it in two ways:
 
 On the other hand, if the device failure rate was specified at 1.5 per year, then:
 
-- Such a device is expected to fail within 0.75 years.
+- Such a device is expected to fail within 0.67 years.
 - If we have 10 such devices and whenever a failure occurs, we're going to quickly replace
   it with a new one, then we are expected to see 15 failures within a year.
 
