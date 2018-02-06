@@ -1,10 +1,16 @@
 Title: Disk Failure Analysis using Backblaze Data
+Thanks: Aby Sam Ross for reviewing the article.
 
 Backblaze has been doing an amazing job of publicly releasing hard drive logs from their
 data centers in a clean and easy-to-use format since 2013. I came across these while I was
 doing a project on reliability analysis at my University in collaboration with NetApp. This
 article describes a part of my project where I crunched such logs to obtain failure rate of
 hard disks as a "continuous" function of its age.
+
+You can find all scripts and utilities I used for generating results at [this repo][];
+from processing Backblaze data files to generation of plots.
+
+[this repo]: https://github.com/johncf/backblaze-proc
 
 <details><summary> Table of Contents</summary>
 
@@ -69,10 +75,10 @@ $$ \frac{160}{3880~\text{device-months}} = 4.1\%~\text{per month} $$
 
 ### Age
 
-Age is a key factor that affects a device's risk of failure. Therefore, it is more
-interesting to study failure rates with respect to age, rather than actual time. For this,
-we simply map the events of interest (those discussed in previous section) from time-domain
-to the age-domain. Let's look at a small example of this mapping.
+Age of a device is believed to be a key factor that affects its risk of failing. Therefore,
+it seems more interesting to study failure rates with respect to age, rather than actual
+time. For this, we simply map the events of interest (those discussed in previous section)
+from time-domain to the age-domain. Let's look at a small example of this mapping.
 
 Suppose we have 2 hard disks -- "disk-1" is brand new and "disk-2" is 365 days old. Both of
 them are kept in operation for the next two years. On 500th day of operation, the newer disk
@@ -87,7 +93,7 @@ Red dashed-line indicates the failure event. Note that the older disk-2, after t
 ![Age-domain events]({attach}plots/age-domain.svg)
 
 After this, the same principles I described in the previous sub-section apply, so as to
-calculate failure rates at various points of age.
+calculate failure rates at various points (or regions) of age.
 
 _Sidenote: For hard disks, age is best represented by power-on time, since the
 [self-monitoring system][SMART] present in most drives contain power-on hours attribute._
@@ -183,6 +189,9 @@ window.
 **Window size:** 3 months
 
 ![Hitachi HDS722020ALA330 failure rate plot]({attach}plots/05-plot.svg)
+
+_(Note: The initial spikes in failure rate are in a region with less than 100 disks
+observed.)_
 
 ### Seagate ST8000DM002
 
@@ -401,16 +410,21 @@ I'm not sure which it is, and Backblaze only had this to say about these drives[
 
 ## Conclusions
 
-Experts claimed that this journey would end with [bathtubs][]! But it pains me to say that I
-found none yet. Perhaps [forces][] are at play that prevents their manifestation, or perhaps
-the journey is incomplete.
+The method I presented is useful for investigating dependence of failure rate on age of
+drives. In particular, the method is focused on the span of age over which a fair amount of
+data is available.
 
-You can find all scripts and utilities I used for generating results at [this repo][];
-from processing Backblaze data files to generation of plots.
+Only looking at the failure rate trend of the [most popular model](#seagate-st4000dm000),
+one might be tempted conclude that hard drives have a higher risk of failing as they age.
+But most other models seem unaffected by age (within the observed span), and
+[some](#wdc-wd30efrx) even show a decreasing trend.
+
+Experts claimed that this journey would produce [bathtubs][]! However, none of what I
+produced matches that description. Perhaps [forces][] are at play that prevents their
+manifestation, or perhaps the journey is incomplete.
 
 [bathtubs]: https://en.wikipedia.org/wiki/Bathtub_curve
 [forces]: https://en.wikipedia.org/wiki/Burn-in
-[this repo]: https://github.com/johncf/backblaze-proc
 
 [^wiki]: Partly borrowed from <https://en.wikipedia.org/wiki/Failure_rate>
 [^sanity]: The data released by Backblaze is of exceptionally high-quality. I've seen things
