@@ -13,7 +13,6 @@ MARKDOWN = {
         'markdown.extensions.meta': {},
         'markdown.extensions.toc': {},
     },
-    'output_format': 'html5',
 }
 
 AUTHOR = 'John C F'
