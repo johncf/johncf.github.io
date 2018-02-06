@@ -17,8 +17,8 @@
 
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Does Older Hard Drives Fail Faster?"/>
-    <meta property="og:description" content="Having to deal with multiple failures on a daily basis in a large datacenter is quite normal. However, having unexpectedly high number of failures can pose a threat to data reliability. The simplest method to minimize unexpected failures is to replace older devices with newer ones on a regular basis …"/>
-    <meta property="og:url" content="https://johncf.github.io/drafts/failure-analysis.html"/>
+    <meta property="og:description" content="Having to deal with multiple failures on a daily basis in a large datacenter is quite normal. However, an unexpectedly high number of failures can pose a threat to data reliability. The simplest method to minimize such failures is to replace older devices with newer ones on a regular basis …"/>
+    <meta property="og:url" content="https://johncf.github.io/failure-analysis.html"/>
     <meta property="og:site_name" content="In Short" />
     <meta name="twitter:card" content="summary">
     <meta name="twitter:creator" content="@jcf256">
@@ -52,6 +52,7 @@
         </h2>
         <nav id="header-menu">
           <ul>
+            <li class="w3-bottombar w3-border-white w3-hover-border-green" style="font-weight: bold;"><a href="https://johncf.github.io/category/analysis.html">analysis</a></li>
             <li class="w3-bottombar w3-border-white w3-hover-border-green" ><a href="https://johncf.github.io/category/meta.html">meta</a></li>
             <li class="w3-bottombar w3-border-white w3-hover-border-green"><a href="/archives.html">Archive</a></li>
           </ul>
@@ -77,11 +78,11 @@
       <div class="col-main w3-container">
         <section id="content">
           <p>Having to deal with multiple failures on a daily basis in a large datacenter is quite
-normal. However, having unexpectedly high number of failures can pose a threat to data
-reliability. The simplest method to minimize unexpected failures is to replace older devices
+normal. However, an unexpectedly high number of failures can pose a threat to data
+reliability. The simplest method to minimize such failures is to replace older devices
 with newer ones on a regular basis. The question is, how long should we keep them before
 returning &mdash; how long would they work reliably enough so as to keep the number of
-failures low.</p>
+failures low?</p>
 <p>Backblaze (a company providing cloud storage services) has been doing an amazing job of
 publicly releasing their well-sanitized hard drive logs in an easily consumable form since
 2015<sup id="fnref:bb-release"><a class="footnote-ref" href="#fn:bb-release" rel="footnote">1</a></sup>. I came across these while I was doing a project on reliability analysis
@@ -190,10 +191,10 @@ from time-domain to the age-domain. Let's look at a small example of this mappin
 Both of them are kept in operation for the next two years. On 500th day of operation, the
 newer disk (disk-1) fails and is removed, but disk-2 kept working for the entire two years.
 Here's the time-domain plot of these events:</p>
-<p><img alt="Time-domain events" src="https://johncf.github.io/drafts/plots/time-domain.svg" /></p>
+<p><img alt="Time-domain events" src="https://johncf.github.io/plots/time-domain.svg" /></p>
 <p>Red dashed-line indicates the failure event. Note that the older disk-2, after two years
 (730 days) of operation, will be 1095 days old. Here's the same in age-domain:</p>
-<p><img alt="Age-domain events" src="https://johncf.github.io/drafts/plots/age-domain.svg" /></p>
+<p><img alt="Age-domain events" src="https://johncf.github.io/plots/age-domain.svg" /></p>
 <p>After this, the same principles I described in the previous sub-section apply, so as to
 calculate failure rates at various points (or regions) of age. For the above (extremely
 limited) example, the average failure rate during the second year of age (365-730 days) is</p>
@@ -238,7 +239,7 @@ Mean failure rate: <strong>2.96% per year</strong></p>
 <p>Useful power-on span of observation: <strong>4.42 years</strong> <br>
 Mean number of disks over useful span: <strong>19828</strong> <br>
 Window size: <strong>1 month</strong></p>
-<p><img alt="Seagate ST4000DM000 failure rate plot" src="https://johncf.github.io/drafts/plots/01-plot.svg" /></p>
+<p><img alt="Seagate ST4000DM000 failure rate plot" src="https://johncf.github.io/plots/01-plot.svg" /></p>
 <h3 id="hgst-hms5c4040ale640">HGST HMS5C4040ALE640</h3>
 <p>Total disk-years observed: <strong>22824</strong> <br>
 Total failures observed: <strong>129</strong> <br>
@@ -246,7 +247,7 @@ Mean failure rate: <strong>0.57% per year</strong></p>
 <p>Useful power-on span of observation: <strong>4.88 years</strong> <br>
 Mean number of disks over useful span: <strong>4673</strong> <br>
 Window size: <strong>1 month</strong></p>
-<p><img alt="HGST HMS5C4040ALE640 failure rate plot" src="https://johncf.github.io/drafts/plots/02-plot.svg" /></p>
+<p><img alt="HGST HMS5C4040ALE640 failure rate plot" src="https://johncf.github.io/plots/02-plot.svg" /></p>
 <h3 id="hgst-hms5c4040ble640">HGST HMS5C4040BLE640</h3>
 <p>Total disk-years observed: <strong>22220</strong> <br>
 Total failures observed: <strong>128</strong> <br>
@@ -254,7 +255,7 @@ Mean failure rate: <strong>0.58% per year</strong></p>
 <p>Useful power-on span of observation: <strong>3.51 years</strong> <br>
 Mean number of disks over useful span: <strong>6317</strong> <br>
 Window size: <strong>1 month</strong></p>
-<p><img alt="HGST HMS5C4040BLE640 failure rate plot" src="https://johncf.github.io/drafts/plots/03-plot.svg" /></p>
+<p><img alt="HGST HMS5C4040BLE640 failure rate plot" src="https://johncf.github.io/plots/03-plot.svg" /></p>
 <h3 id="hitachi-hds5c3030ala630">Hitachi HDS5C3030ALA630</h3>
 <p>Total disk-years observed: <strong>15645</strong> <br>
 Total failures observed: <strong>123</strong> <br>
@@ -262,7 +263,7 @@ Mean failure rate: <strong>0.79% per year</strong></p>
 <p>Useful power-on span of observation: <strong>5.72 years</strong> <br>
 Mean number of disks over useful span: <strong>2731</strong> <br>
 Window size: <strong>45 days</strong></p>
-<p><img alt="Hitachi HDS5C3030ALA630 failure rate plot" src="https://johncf.github.io/drafts/plots/04-plot.svg" /></p>
+<p><img alt="Hitachi HDS5C3030ALA630 failure rate plot" src="https://johncf.github.io/plots/04-plot.svg" /></p>
 <h3 id="hitachi-hds722020ala330">Hitachi HDS722020ALA330</h3>
 <p>Total disk-years observed: <strong>11894</strong> <br>
 Total failures observed: <strong>202</strong> <br>
@@ -270,7 +271,7 @@ Mean failure rate: <strong>1.70% per year</strong></p>
 <p>Useful power-on span of observation: <strong>6.11 years</strong> <br>
 Mean number of disks over useful span: <strong>1944</strong> <br>
 Window size: <strong>3 months</strong></p>
-<p><img alt="Hitachi HDS722020ALA330 failure rate plot" src="https://johncf.github.io/drafts/plots/05-plot.svg" /></p>
+<p><img alt="Hitachi HDS722020ALA330 failure rate plot" src="https://johncf.github.io/plots/05-plot.svg" /></p>
 <p><em>(Note: The initial spikes in failure rate are in a region with less than 100 disks
 observed.)</em></p>
 <h3 id="seagate-st8000dm002">Seagate ST8000DM002</h3>
@@ -280,7 +281,7 @@ Mean failure rate: <strong>1.11% per year</strong></p>
 <p>Useful power-on span of observation: <strong>1.36 years</strong> <br>
 Mean number of disks over useful span: <strong>7461</strong> <br>
 Window size: <strong>15 days</strong></p>
-<p><img alt="Seagate ST8000DM002 failure rate plot" src="https://johncf.github.io/drafts/plots/06-plot.svg" /></p>
+<p><img alt="Seagate ST8000DM002 failure rate plot" src="https://johncf.github.io/plots/06-plot.svg" /></p>
 <h3 id="hitachi-hds5c4040ale630">Hitachi HDS5C4040ALE630</h3>
 <p>Total disk-years observed: <strong>9820</strong> <br>
 Total failures observed: <strong>63</strong> <br>
@@ -288,7 +289,7 @@ Mean failure rate: <strong>0.64% per year</strong></p>
 <p>Useful power-on span of observation: <strong>5.06 years</strong> <br>
 Mean number of disks over useful span: <strong>1937</strong> <br>
 Window size: <strong>2 months</strong></p>
-<p><img alt="Hitachi HDS5C4040ALE630 failure rate plot" src="https://johncf.github.io/drafts/plots/07-plot.svg" /></p>
+<p><img alt="Hitachi HDS5C4040ALE630 failure rate plot" src="https://johncf.github.io/plots/07-plot.svg" /></p>
 <h3 id="seagate-st6000dx000">Seagate ST6000DX000</h3>
 <p>Total disk-years observed: <strong>4749</strong> <br>
 Total failures observed: <strong>59</strong> <br>
@@ -296,7 +297,7 @@ Mean failure rate: <strong>1.24% per year</strong></p>
 <p>Useful power-on span of observation: <strong>3.15 years</strong> <br>
 Mean number of disks over useful span: <strong>1502</strong> <br>
 Window size: <strong>2 months</strong></p>
-<p><img alt="Seagate ST6000DX000 failure rate plot" src="https://johncf.github.io/drafts/plots/08-plot.svg" /></p>
+<p><img alt="Seagate ST6000DX000 failure rate plot" src="https://johncf.github.io/plots/08-plot.svg" /></p>
 <h3 id="seagate-st8000nm0055">Seagate ST8000NM0055</h3>
 <p>Total disk-years observed: <strong>3653</strong> <br>
 Total failures observed: <strong>44</strong> <br>
@@ -304,7 +305,7 @@ Mean failure rate: <strong>1.20% per year</strong></p>
 <p>Useful power-on span of observation: <strong>0.83 years</strong> <br>
 Mean number of disks over useful span: <strong>4370</strong> <br>
 Window size: <strong>15 days</strong></p>
-<p><img alt="Seagate ST8000NM0055 failure rate plot" src="https://johncf.github.io/drafts/plots/09-plot.svg" /></p>
+<p><img alt="Seagate ST8000NM0055 failure rate plot" src="https://johncf.github.io/plots/09-plot.svg" /></p>
 <h3 id="hitachi-hds723030ala640">Hitachi HDS723030ALA640</h3>
 <p>Total disk-years observed: <strong>3332</strong> <br>
 Total failures observed: <strong>67</strong> <br>
@@ -312,7 +313,7 @@ Mean failure rate: <strong>2.01% per year</strong></p>
 <p>Useful power-on span of observation: <strong>5.04 years</strong> <br>
 Mean number of disks over useful span: <strong>659</strong> <br>
 Window size: <strong>3 months</strong></p>
-<p><img alt="Hitachi HDS723030ALA640 failure rate plot" src="https://johncf.github.io/drafts/plots/11-plot.svg" /></p>
+<p><img alt="Hitachi HDS723030ALA640 failure rate plot" src="https://johncf.github.io/plots/11-plot.svg" /></p>
 <h3 id="wdc-wd30efrx">WDC WD30EFRX</h3>
 <p>Total disk-years observed: <strong>3302</strong> <br>
 Total failures observed: <strong>166</strong> <br>
@@ -320,7 +321,7 @@ Mean failure rate: <strong>5.03% per year</strong></p>
 <p>Useful power-on span of observation: <strong>4.71 years</strong> <br>
 Mean number of disks over useful span: <strong>701</strong> <br>
 Window size: <strong>3 months</strong></p>
-<p><img alt="WDC WD30EFRX failure rate plot" src="https://johncf.github.io/drafts/plots/12-plot.svg" /></p>
+<p><img alt="WDC WD30EFRX failure rate plot" src="https://johncf.github.io/plots/12-plot.svg" /></p>
 <h3 id="seagate-st31500541as">Seagate ST31500541AS</h3>
 <p>Total disk-years observed: <strong>2818</strong> <br>
 Total failures observed: <strong>274</strong> <br>
@@ -328,7 +329,7 @@ Mean failure rate: <strong>9.72% per year</strong></p>
 <p>Useful power-on span of observation: <strong>5.70 years</strong> <br>
 Mean number of disks over useful span: <strong>494</strong> <br>
 Window size: <strong>6 months</strong></p>
-<p><img alt="Seagate ST31500541AS failure rate plot" src="https://johncf.github.io/drafts/plots/13-plot.svg" /></p>
+<p><img alt="Seagate ST31500541AS failure rate plot" src="https://johncf.github.io/plots/13-plot.svg" /></p>
 <h3 id="seagate-st500lm012-hn">Seagate ST500LM012 HN</h3>
 <p>Total disk-years observed: <strong>1555</strong> <br>
 Total failures observed: <strong>39</strong> <br>
@@ -336,7 +337,7 @@ Mean failure rate: <strong>2.51% per year</strong></p>
 <p>Useful power-on span of observation: <strong>3.10 years</strong> <br>
 Mean number of disks over useful span: <strong>502</strong> <br>
 Window size: <strong>4 months</strong></p>
-<p><img alt="Seagate ST500LM012 HN failure rate plot" src="https://johncf.github.io/drafts/plots/14-plot.svg" /></p>
+<p><img alt="Seagate ST500LM012 HN failure rate plot" src="https://johncf.github.io/plots/14-plot.svg" /></p>
 <h3 id="wdc-wd60efrx">WDC WD60EFRX</h3>
 <p>Total disk-years observed: <strong>1264</strong> <br>
 Total failures observed: <strong>58</strong> <br>
@@ -344,7 +345,7 @@ Mean failure rate: <strong>4.59% per year</strong></p>
 <p>Useful power-on span of observation: <strong>3.17 years</strong> <br>
 Mean number of disks over useful span: <strong>396</strong> <br>
 Window size: <strong>6 months</strong></p>
-<p><img alt="WDC WD60EFRX failure rate plot" src="https://johncf.github.io/drafts/plots/15-plot.svg" /></p>
+<p><img alt="WDC WD60EFRX failure rate plot" src="https://johncf.github.io/plots/15-plot.svg" /></p>
 <h3 id="wdc-wd5000lpvx">WDC WD5000LPVX</h3>
 <p>Total disk-years observed: <strong>874</strong> <br>
 Total failures observed: <strong>40</strong> <br>
@@ -352,7 +353,7 @@ Mean failure rate: <strong>4.58% per year</strong></p>
 <p>Useful power-on span of observation: <strong>3.47 years</strong> <br>
 Mean number of disks over useful span: <strong>251</strong> <br>
 Window size: <strong>6 months</strong></p>
-<p><img alt="WDC WD5000LPVX failure rate plot" src="https://johncf.github.io/drafts/plots/16-plot.svg" /></p>
+<p><img alt="WDC WD5000LPVX failure rate plot" src="https://johncf.github.io/plots/16-plot.svg" /></p>
 <h2 id="results-low-data">Results - Low Data</h2>
 <p>The following models were not as popular as the ones seen till now, and the available logs
 were insufficient to produce low-noise graphs. Even with a wider window size, failure rates
@@ -364,7 +365,7 @@ Mean failure rate: <strong>6.80% per year</strong></p>
 <p>Useful power-on span of observation: <strong>5.16 years</strong> <br>
 Mean number of disks over useful span: <strong>148</strong> <br>
 Window size: <strong>8 months</strong></p>
-<p><img alt="WDC WD10EADS failure rate plot" src="https://johncf.github.io/drafts/plots/17-plot.svg" /></p>
+<p><img alt="WDC WD10EADS failure rate plot" src="https://johncf.github.io/plots/17-plot.svg" /></p>
 <h3 id="seagate-st4000dx000">Seagate ST4000DX000</h3>
 <p>Total disk-years observed: <strong>688</strong> <br>
 Total failures observed: <strong>76</strong> <br>
@@ -372,7 +373,7 @@ Mean failure rate: <strong>11.05% per year</strong></p>
 <p>Useful power-on span of observation: <strong>4.61 years</strong> <br>
 Mean number of disks over useful span: <strong>149</strong> <br>
 Window size: <strong>8 months</strong></p>
-<p><img alt="Seagate ST4000DX000 failure rate plot" src="https://johncf.github.io/drafts/plots/18-plot.svg" /></p>
+<p><img alt="Seagate ST4000DX000 failure rate plot" src="https://johncf.github.io/plots/18-plot.svg" /></p>
 <h3 id="seagate-st31500341as">Seagate ST31500341AS</h3>
 <p>Total disk-years observed: <strong>506</strong> <br>
 Total failures observed: <strong>125</strong> <br>
@@ -380,7 +381,7 @@ Mean failure rate: <strong>24.70% per year</strong></p>
 <p>Useful power-on span of observation: <strong>4.57 years</strong> <br>
 Mean number of disks over useful span: <strong>110</strong> <br>
 Window size: <strong>8 months</strong></p>
-<p><img alt="Seagate ST31500341AS failure rate plot" src="https://johncf.github.io/drafts/plots/19-plot.svg" /></p>
+<p><img alt="Seagate ST31500341AS failure rate plot" src="https://johncf.github.io/plots/19-plot.svg" /></p>
 <h3 id="seagate-st33000651as">Seagate ST33000651AS</h3>
 <p>Total disk-years observed: <strong>440</strong> <br>
 Total failures observed: <strong>19</strong> <br>
@@ -388,7 +389,7 @@ Mean failure rate: <strong>4.32% per year</strong></p>
 <p>Useful power-on span of observation: <strong>3.75 years</strong> <br>
 Mean number of disks over useful span: <strong>116</strong> <br>
 Window size: <strong>8 months</strong></p>
-<p><img alt="Seagate ST33000651AS failure rate plot" src="https://johncf.github.io/drafts/plots/20-plot.svg" /></p>
+<p><img alt="Seagate ST33000651AS failure rate plot" src="https://johncf.github.io/plots/20-plot.svg" /></p>
 <h2 id="results-bad-egg">Results - Bad Egg?</h2>
 <p>One model stood out from the rest with a staggeringly high failure rate.</p>
 <h3 id="seagate-st3000dm001">Seagate ST3000DM001</h3>
@@ -398,13 +399,13 @@ Mean failure rate: <strong>41.78% per year</strong></p>
 <p>Useful power-on span of observation: <strong>3.28 years</strong> <br>
 Mean number of disks over useful span: <strong>1060 disks</strong> <br>
 Window size: <strong>3 months</strong></p>
-<p><img alt="Seagate ST3000DM001 failure rate plot" src="https://johncf.github.io/drafts/plots/10-plot.svg" /></p>
+<p><img alt="Seagate ST3000DM001 failure rate plot" src="https://johncf.github.io/plots/10-plot.svg" /></p>
 <p><em>(Note: The upper-limit of Y-axis is 120%!)</em></p>
 <p>Just to make sure the logs were sane<sup id="fnref:sanity"><a class="footnote-ref" href="#fn:sanity" rel="footnote">3</a></sup>, I plotted the number of failures reported per
 day and the number of disks in deployment, against datestamps.</p>
-<p><img alt="Seagate ST3000DM001 daily stats plot" src="https://johncf.github.io/drafts/plots/daily-stats-10.svg" /></p>
+<p><img alt="Seagate ST3000DM001 daily stats plot" src="https://johncf.github.io/plots/daily-stats-10.svg" /></p>
 <p>For comparison, below is the same for the most popular model.</p>
-<p><img alt="Seagate ST4000DM000 daily stats plot" src="https://johncf.github.io/drafts/plots/daily-stats-01.svg" /></p>
+<p><img alt="Seagate ST4000DM000 daily stats plot" src="https://johncf.github.io/plots/daily-stats-01.svg" /></p>
 <p>That number of failures is indeed quite an anomaly. I can think of a few possible reasons
 for this:</p>
 <ul>
@@ -530,13 +531,13 @@ and written queries that still haunts me at night!&#160;<a class="footnote-backr
 
           <p style="font-size:10pt; font-style: italic;">Did you like this article? Share it with your friends!</p>
           <div id="share" class="share">
-            <a href="https://www.facebook.com/sharer.php?u=https%3A//johncf.github.io/drafts/failure-analysis.html&amp;t=Does%20Older%20Hard%20Drives%20Fail%20Faster%3F%20-%20In%20Short" target="_blank" class="w3-btn w3-indigo">
+            <a href="https://www.facebook.com/sharer.php?u=https%3A//johncf.github.io/failure-analysis.html&amp;t=Does%20Older%20Hard%20Drives%20Fail%20Faster%3F%20-%20In%20Short" target="_blank" class="w3-btn w3-indigo">
               <i class="fa fa-facebook"></i>
             </a>
-            <a href="https://twitter.com/share?url=https%3A//johncf.github.io/drafts/failure-analysis.html&amp;text=Does%20Older%20Hard%20Drives%20Fail%20Faster%3F%20-%20In%20Short" target="_blank" class="w3-btn w3-blue">
+            <a href="https://twitter.com/share?url=https%3A//johncf.github.io/failure-analysis.html&amp;text=Does%20Older%20Hard%20Drives%20Fail%20Faster%3F%20-%20In%20Short" target="_blank" class="w3-btn w3-blue">
               <i class="fa fa-twitter"></i>
             </a>
-            <a href="https://plus.google.com/share?url=https%3A//johncf.github.io/drafts/failure-analysis.html" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" class="w3-btn w3-red">
+            <a href="https://plus.google.com/share?url=https%3A//johncf.github.io/failure-analysis.html" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" class="w3-btn w3-red">
               <i class="fa fa-google-plus"></i>
             </a>
           </div>
