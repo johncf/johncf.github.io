@@ -43,6 +43,7 @@ a img:hover {
 article {
   font-size: 13pt;
   padding-top: 0;
+  margin-top: 3rem;
 }
 
 abbr[title] {
