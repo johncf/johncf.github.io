@@ -16,7 +16,7 @@ where I crunched such logs to obtain failure rate of hard drives as a "continuou
 of its age, which might help in answering the above question.&lt;/p&gt;
 &lt;p&gt;You can find all scripts and utilities I used for generating results at &lt;a href="https://github.com/johncf/backblaze-proc"&gt;this repo&lt;/a&gt;;
 from processing Backblaze data files to generation of plots.&lt;/p&gt;
-&lt;p&gt;&lt;details&gt;&lt;summary&gt; Table of Contents&lt;/summary&gt;&lt;/p&gt;
+&lt;p&gt;&lt;details&gt;&lt;summary&gt;&lt;span&gt;Table of Contents&lt;/span&gt;&lt;/summary&gt;&lt;/p&gt;
 &lt;div class="toc"&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="#on-failure-rates"&gt;On Failure Rates&lt;/a&gt;&lt;ul&gt;

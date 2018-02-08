@@ -70,17 +70,10 @@ code, kbd, pre, samp {
 
 details > summary {
   cursor: pointer;
+}
+
+details > summary > span {
   color: #4CAF50;
-}
-
-details > summary::before {
-  content: "▸";
-  color: black;
-  margin-right: 4px;
-}
-
-details[open] > summary::before {
-  content: "▾";
 }
 
 
