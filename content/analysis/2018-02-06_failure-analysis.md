@@ -23,7 +23,7 @@ from processing Backblaze data files to generation of plots.
 
 [^bb-release]: <https://www.backblaze.com/blog/hard-drive-data-feb2015/>
 
-<details><summary> Table of Contents</summary>
+<details><summary><span>Table of Contents</span></summary>
 
 [TOC]
 
