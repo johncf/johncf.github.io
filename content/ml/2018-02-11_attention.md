@@ -1,4 +1,5 @@
 Title: Practical Advice on Attentional Mechanism
+Tags: neural networks, machine learning
 
 If you're new to the concept of attention, then I highly recommend reading the "Attentional Interfaces" section of [this article][distill] first.
 

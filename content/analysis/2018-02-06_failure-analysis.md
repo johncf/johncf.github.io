@@ -1,5 +1,6 @@
 Title: Does Older Hard Drives Fail Faster?
 Thanks: Aby Sam Ross for reviewing the article.
+Tags: failure analysis, backblaze
 Status: published
 
 Having to deal with multiple failures on a daily basis in a large datacenter is quite
