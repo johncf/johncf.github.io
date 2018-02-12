@@ -6,7 +6,7 @@ If you're new to the concept of attention, then I highly recommend reading the "
 
 Here's a diagramatic representation of an attention layer:
 
-\[diagram]
+![Attention Layer]({attach}diags/attn.svg)
 
 This is usually part of an encoder-decoder model such as:
 

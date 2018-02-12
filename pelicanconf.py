@@ -20,7 +20,7 @@ SITENAME = 'In Short'
 SITEURL = ''
 
 PATH = 'content'
-STATIC_PATHS = [ 'analysis' ]
+STATIC_PATHS = [ 'analysis', 'ml' ]
 
 TIMEZONE = 'Asia/Kolkata'
 DEFAULT_LANG = 'en'
